@@ -22,7 +22,7 @@ public class WarmUpExercise extends GamePlayer{
 	 * @param args
 	 */
 	public static void main(String[] args) {				 
-		 WarmUpExercise player_01 = new WarmUpExercise(args[0], args[1]);  		 
+		 WarmUpExercise player_01 = new WarmUpExercise("emerson", "kirby");  		 
 	}
 	
 	/**
@@ -52,6 +52,8 @@ public class WarmUpExercise extends GamePlayer{
 	@Override
 	public void onLogin() {
 		System.out.println("I am called because the server said I am logged in successfully");
+		ArrayList<String> Rooms = gameClient.getRoomList();
+		System.out.println(Rooms);
 	}
 
 }
