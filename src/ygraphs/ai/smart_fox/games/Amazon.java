@@ -145,7 +145,7 @@ public class Amazon extends GamePlayer {
 	private void setupGUI() {
 		guiFrame = new JFrame();
 
-		guiFrame.setSize(600, 600);
+		guiFrame.setSize(750, 600);
 		guiFrame.setTitle("Game of the Amazons (COSC 322, UBCO)");
 
 		guiFrame.setLocation(200, 200);
@@ -203,7 +203,7 @@ public class Amazon extends GamePlayer {
 		private BoardGameModel gameModel = null;
 
 		boolean playerAMove;
-
+		
 		public GameBoard(Amazon game) {
 			this.game = game;
 			gameModel = new BoardGameModel(this.rows + 1, this.cols + 1);
@@ -293,7 +293,7 @@ public class Amazon extends GamePlayer {
 
 		// JComponent method
 		public Dimension getPreferredSize() {
-			return new Dimension(500, 500);
+			return new Dimension(750, 500);
 		}
 
 		/**
