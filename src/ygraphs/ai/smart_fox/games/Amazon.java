@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import ygraphs.ai.smart_fox.GameMessage;
+import ygraphs.ai.smart_fox.games.Amazon;
 import ygraphs.ai.smart_fox.games.AmazonsGameMessage;
 import ygraphs.ai.smart_fox.games.BoardGameModel;
 import ygraphs.ai.smart_fox.games.GameClient;

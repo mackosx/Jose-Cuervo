@@ -6,6 +6,11 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import ygraphs.ai.smart_fox.games.BoardGameModel;
+
+/**
+ * @author mackosx
+ */
 public class GameBoard extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private int rows = 10;
