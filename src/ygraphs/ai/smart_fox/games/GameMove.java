@@ -85,6 +85,42 @@ public class GameMove {
 				break;
 			}
 		}
+		// check up-right
+		for (int i = curr.x + 1, j = curr.y +1; i < game.gameBoard.length && j < game.gameBoard.length; i++,j++) {
+			if (!occupied(i, j, game)) {
+				// for each position, add all possible arrow shots to move list
+				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
+			} else {
+				break;
+			}
+		}
+		// check up-left
+		for (int i = curr.x - 1, j = curr.y + 1; i > 0 && j < game.gameBoard.length; i--,j++) {
+			if (!occupied(i, j, game)) {
+				// for each position, add all possible arrow shots to move list
+				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
+			} else {
+				break;
+			}
+		}
+		// check down-right
+		for (int i = curr.x + 1, j = curr.y - 1; i < game.gameBoard.length && j > 0; i++,j--) {
+			if (!occupied(i, j, game)) {
+				// for each position, add all possible arrow shots to move list
+				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
+			} else {
+				break;
+			}
+		}
+		// check down left
+		for (int i = curr.x - 1, j = curr.y - 1; i > 0 && j > 0; i++,j++) {
+			if (!occupied(i, j, game)) {
+				// for each position, add all possible arrow shots to move list
+				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
+			} else {
+				break;
+			}
+		}
 
 		return list;
 
@@ -122,6 +158,43 @@ public class GameMove {
 		for (int x = newX + 1; x > game.gameBoard.length; x++) {
 			if (!occupied(x, currY, game)) {
 				validMoves.add(new GameMove(currX, currY, newX, newY, x, currY, type));
+			} else {
+				break;
+			}
+		}
+		// TODO: convert to correct
+		// check up-right
+		for (int i = curr.x + 1, j = curr.y +1; i < game.gameBoard.length && j < game.gameBoard.length; i++,j++) {
+			if (!occupied(i, j, game)) {
+				// for each position, add all possible arrow shots to move list
+				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
+			} else {
+				break;
+			}
+		}
+		// check up-left
+		for (int i = curr.x - 1, j = curr.y + 1; i > 0 && j < game.gameBoard.length; i--,j++) {
+			if (!occupied(i, j, game)) {
+				// for each position, add all possible arrow shots to move list
+				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
+			} else {
+				break;
+			}
+		}
+		// check down-right
+		for (int i = curr.x + 1, j = curr.y - 1; i < game.gameBoard.length && j > 0; i++,j--) {
+			if (!occupied(i, j, game)) {
+				// for each position, add all possible arrow shots to move list
+				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
+			} else {
+				break;
+			}
+		}
+		// check down left
+		for (int i = curr.x - 1, j = curr.y - 1; i > 0 && j > 0; i++,j++) {
+			if (!occupied(i, j, game)) {
+				// for each position, add all possible arrow shots to move list
+				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
 			} else {
 				break;
 			}
