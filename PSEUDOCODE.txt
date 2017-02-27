@@ -1,0 +1,32 @@
+things we keep track of: ourQueens, theirQueens
+Team Lame -> sends move to client
+gameClient calls player.handleGameMessage(Game.ACTION_MOVE)
+Jose parses msg -> returns details of opponent move
+    - Jose.start()
+        - start our timer
+        - update game board with opponent move
+        - call gameModel.positionMarked();
+        - function gameMove IDDDLS(Graph)
+            - for depth = 0 to inf
+                - result = DLS(Graph)
+                - if result != cutoff
+                    - return result
+
+        - function gameMove DLS(Graph, depth)
+            - limit = depth
+            - return recursiveDLS(makeNode(Graph.currentState), Graph, limit)
+
+        - function gameMove recursiveDLS(node, Graph, limit)
+            - boolean cutoff = true
+            - if limit = 0
+                - return cutoff
+            - else
+                - cutoff = false
+                - for each(move in getChildren(node.STATE))
+                    - child = childNode(Graph, node, gameMove)
+                    - result = recursiveDLS(child, Graph, limit - 1)
+                    - if result != cutoff
+                        - return result
+
+
+        - function alpha-beta()

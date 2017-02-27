@@ -44,7 +44,7 @@ public class Jose extends GamePlayer {
 	// Iterative Deepening based on number of turns
 	LinkedList<GameMove> found = new LinkedList<GameMove>();
 
-	public LinkedList<GameMove> iterativeDeepening(GameMove root) {
+	public LinkedList<GameMove> IDDLS(GameMove root) {
 		GameMove currentBest;
 		double bestValue;
 		for (int i = 0; i <= turnCount; i++) {
@@ -129,6 +129,8 @@ public class Jose extends GamePlayer {
 		System.out.println("QNew: " + qnew);
 		System.out.println("Arrow: " + arrow);
 
+		
+		// mark position on gui (board)
 		board.markPosition(qnew.get(0), qnew.get(1), arrow.get(0), arrow.get(1), qcurr.get(0), qcurr.get(1), true);
 
 	}
