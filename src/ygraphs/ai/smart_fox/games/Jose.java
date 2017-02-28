@@ -42,9 +42,10 @@ public class Jose extends GamePlayer {
 	 */
 
 	// Iterative Deepening based on number of turns
+	// TODO: Results(state, action)
 	LinkedList<GameMove> found = new LinkedList<GameMove>();
 
-	public LinkedList<GameMove> IDDLS(GameMove root) {
+	public LinkedList<GameMove> IDDLS(BoardGameModel currentState) {
 		GameMove currentBest;
 		double bestValue;
 		for (int i = 0; i <= turnCount; i++) {
@@ -73,6 +74,63 @@ public class Jose extends GamePlayer {
 		return null;
 
 	}
+	
+	
+	
+	
+	
+	
+	public 
+	GameMove bestMove;
+	int limit;
+	
+	public GameMove alphaBeta(BoardGameModel s, int limit){ //returns an action
+		int v = maxValue(s,Integer.MIN_VALUE,Integer.MAX_VALUE, limit);
+		
+		return bestMove;
+	}
+
+
+
+
+	public GameMove maxValue(Node s,int alpha, int beta, int limit){ //returns a heuristic value
+		if (depth = limit)
+			return minDistance(s);
+		int v =Integer.MIN_VALUE;
+		for(Node child: s.getChildren()){
+			v = Math.max(v, minValue(State.result(s, ),alpha, beta));
+			if(v >= alpha)
+				return v;
+			alpha = Math.max(alpha, v);
+			return v;
+		}
+	}
+
+
+	public GameMove minValue(state s,int α, int β){ //returns a utility value
+		if CUTOFF-TEST(s)
+			return minDistance(s);
+		int v = Integer.MAX_VALUE;
+		for (Node child : getChildren(Node){
+		v =Math.min(v, maxValue(Node.result(s, child.), alpha, beta));
+				if (v <= alpha)
+				return v;
+	beta= Math.min(beta, v);
+	return v
+	}
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	// create interface
 	private void setupGUI() {

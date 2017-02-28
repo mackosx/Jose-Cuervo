@@ -124,5 +124,4 @@ public class GameBoard extends JPanel {
 		return new Dimension(750, 500);
 	}
 
-
 }// end 
