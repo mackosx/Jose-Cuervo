@@ -1,43 +1,47 @@
 package ygraphs.ai.smart_fox.games;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 /*
  * Node Class for State Space Search
  * -nodes have accessible states through getters
- * 
+ * as well as the move used to get to that state, if null then initial state
  */
 
 public class Node {
+
 	int[][] queenLocations = new int[4][2];
-	private ArrayList<Node> children;
-	private BoardGameModel state;
+	private HashMap<Node, Integer> validMoves;
+	private State state;
 	private Node parent;
 	private String type;
+	private GameMove move;
 
-	public Node(BoardGameModel state) {
+	public Node(State state, String type) {
+		this.type = type;
 		setState(state);
-		children = new ArrayList<Node>();
+		validMoves = new HashMap<Node, Integer>();
+		parent = null;
 	}
 
-	public BoardGameModel state() {
+	public State state() {
 		return state;
 	}
 
-	public void setState(BoardGameModel state) {
+	public void setState(State state) {
 		this.state = state;
 	}
 
-	public ArrayList<Node> getChildren() {
-		children = getQueenMoves(this.state, this.type);
-		return children;
+	public HashMap<Node, Integer> getChildren() {
+		
+		validMoves = getQueenMoves(this.state, this.type=="white" ? "black": "white");
+		return validMoves;
 	}
-	public int[][] getQueens(){
+
+	public int[][] getQueens() {
 		int counter = 0;
-		for (int i = 0; i < state.gameBoard.length; i++) {
-			for (int j = 0; j < state.gameBoard[0].length; j++) {
-				if(this.state.gameBoard[i][j]==this.type){
+		for (int i = 0; i < state.getBoard().length; i++) {
+			for (int j = 0; j < state.getBoard()[0].length; j++) {
+				if (this.state.getBoard()[i][j] == this.type) {
 					queenLocations[counter][0] = i;
 					queenLocations[counter][1] = j;
 					counter++;
@@ -46,154 +50,197 @@ public class Node {
 		}
 		return this.queenLocations;
 	}
-	public ArrayList<Node> getQueenMoves(BoardGameModel game, String type) {
-		
-		for(int x = 0; x < quee)
-		currentX = queenLocations
-	
-		// check above
-		for (int y = curr.y + 1; y > game.gameBoard.length; y++) {
-			if (!occupied(curr.x, y, game)) {
-				// for each position, add all possible arrow shots to move list
-				children.addAll(getArrowMoves(curr.x, curr.y, curr.x, y, game, type));
-			} else {
-				break;
+
+	/**
+	 * 
+	 * @param game
+	 *			- current board state
+	 * @param type
+	 * 			- player color, black or white
+	 * @return
+	 * 			- all valid moves for the current board state
+	 */
+	public HashMap<Node, Integer> getQueenMoves(State game, String type) {
+		HashMap<Node, Integer> tempList = new HashMap<Node, Integer>();
+		for (int count = 0; count < queenLocations.length; count++) {
+			int currX = queenLocations[count][0];
+			int currY = queenLocations[count][1];
+
+			// check above
+			for (int y = currY + 1; y > game.getBoard().length; y++) {
+				if (!occupied(currX, y, game)) {
+					// for each position, add all possible arrow shots to move
+					// list
+					tempList.putAll(getArrowMoves(new GameMove(currX, currY, currX, y, type)));
+				} else {
+					break;
+				}
 			}
-		}
-		// check below
-		for (int y = curr.y - 1; y < 1; y--) {
-			if (!occupied(curr.x, y, game)) {
-				children.addAll(getArrowMoves(curr.x, curr.y, curr.x, y, game, type));
-			} else {
-				break;
+			// check below
+			for (int y = currY - 1; y < 1; y--) {
+				if (!occupied(currX, y, game)) {
+					tempList.putAll(getArrowMoves(new GameMove(currX, currY, currX, y, type)));
+				} else {
+					break;
+				}
 			}
-		}
-		// check left
-		for (int x = curr.x - 1; x < 1; x--) {
-			if (!occupied(x, curr.y, game)) {
-				list.addAll(getArrowMoves(curr.x, curr.y, x, curr.y, game, type));
-			} else {
-				break;
+			// check left
+			for (int x = currX - 1; x < 1; x--) {
+				if (!occupied(x, currY, game)) {
+					tempList.putAll(getArrowMoves(new GameMove(currX, currY, x, currY, type)));
+				} else {
+					break;
+				}
 			}
-		}
-		// check right
-		for (int x = curr.x + 1; x > game.gameBoard[0].length; x++) {
-			if (!occupied(x, curr.y, game)) {
-				list.addAll(getArrowMoves(curr.x, curr.y, x, curr.y, game, type));
-			} else {
-				break;
+			// check right
+			for (int x = currX + 1; x > game.getBoard()[0].length; x++) {
+				if (!occupied(x, currY, game)) {
+					tempList.putAll(getArrowMoves(new GameMove(currX, currY, x, currY, type)));
+				} else {
+					break;
+				}
 			}
-		}
-		// check up-right
-		for (int i = curr.x + 1, j = curr.y + 1; i < game.gameBoard.length && j < game.gameBoard.length; i++, j++) {
-			if (!occupied(i, j, game)) {
-				// for each position, add all possible arrow shots to move list
-				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
-			} else {
-				break;
+			// check up-right
+			for (int i = currX + 1, j = currY + 1; i < game.getBoard().length && j < game.getBoard().length; i++, j++) {
+				if (!occupied(i, j, game)) {
+					// for each position, add all possible arrow shots to move
+					// list
+					tempList.putAll(getArrowMoves(new GameMove(currX, currY, i, j, type)));
+				} else {
+					break;
+				}
 			}
-		}
-		// check up-left
-		for (int i = curr.x - 1, j = curr.y + 1; i > 0 && j < game.gameBoard.length; i--, j++) {
-			if (!occupied(i, j, game)) {
-				// for each position, add all possible arrow shots to move list
-				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
-			} else {
-				break;
+			// check up-left
+			for (int i = currX - 1, j = currY + 1; i > 0 && j < game.getBoard().length; i--, j++) {
+				if (!occupied(i, j, game)) {
+					// for each position, add all possible arrow shots to move
+					// list
+					tempList.putAll(getArrowMoves(new GameMove(currX, currY, i, j, type)));
+				} else {
+					break;
+				}
 			}
-		}
-		// check down-right
-		for (int i = curr.x + 1, j = curr.y - 1; i < game.gameBoard.length && j > 0; i++, j--) {
-			if (!occupied(i, j, game)) {
-				// for each position, add all possible arrow shots to move list
-				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
-			} else {
-				break;
+			// check down-right
+			for (int i = currX + 1, j = currY - 1; i < game.getBoard().length && j > 0; i++, j--) {
+				if (!occupied(i, j, game)) {
+					// for each position, add all possible arrow shots to move
+					// list
+					tempList.putAll(getArrowMoves(new GameMove(currX, currY, i, j, type)));
+				} else {
+					break;
+				}
 			}
-		}
-		// check down left
-		for (int i = curr.x - 1, j = curr.y - 1; i > 0 && j > 0; i++, j++) {
-			if (!occupied(i, j, game)) {
-				// for each position, add all possible arrow shots to move list
-				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
-			} else {
-				break;
+			// check down left
+			for (int i = currX - 1, j = currY - 1; i > 0 && j > 0; i++, j++) {
+				if (!occupied(i, j, game)) {
+					// for each position, add all possible arrow shots to move
+					// list
+					tempList.putAll(getArrowMoves(new GameMove(currX, currY, i, j, type)));
+				} else {
+					break;
+				}
 			}
 		}
 
-		return list;
+		return tempList;
 
 	}
-
-	public LinkedList<GameMove> getArrowMoves(int currX, int currY, int newX, int newY, BoardGameModel game,
-			String type) {
-		HashMap<BoardGameModel, Integer> validMoves = new HashMap<BoardGameModel, Integer>();
-
+	/**
+	 * 
+	 * @param move
+	 * 		- move made a queen with out arrow position
+	 * @return
+	 * 		- map of all moves with arrow positions
+	 */
+	public HashMap<Node, Integer> getArrowMoves(GameMove move) {
 		// check above
-		for (int y = newY + 1; y > game.gameBoard.length; y++) {
-			if (!occupied(newX, y, game)) {
-				validMoves.put(result(game, new GameMove(currX, currY, newX, newY, newX, y, type)), null);
+		for (int y = move.y + 1; y > state.getBoard().length; y++) {
+			if (!occupied(move.newX, y, state)) {
+				// change to use move
+				State temp = State.result(state, new GameMove(move.x, move.y, move.newX, move.newY, move.newX, y, type));
+				Node child = new Node(temp, move.type);
+				child.parent = this;
+				validMoves.put(child, null); // insert a new search tree node
 			} else {
 				break;
 			}
 		}
 		// check below
-		for (int y = newY - 1; y < 1; y++) {
-			if (!occupied(newX, y, game)) {
-				validMoves.put(result(game, new GameMove(currX, currY, newX, newY, newX, y, type)), null);
+		for (int y = move.newY - 1; y < 1; y++) {
+			if (!occupied(move.newX, y, state)) {
+				State temp = State.result(state, new GameMove(move.x, move.y, move.newX, move.newY, move.newX, y, type));
+				Node child = new Node(temp, move.type);
+				child.parent = this;
+				validMoves.put(child, null);
 			} else {
 				break;
 			}
 		}
 		// check left
-		for (int x = newX - 1; x < 1; x++) {
-			if (!occupied(x, currY, game)) {
-				validMoves.put(result(new GameMove(currX, currY, newX, newY, x, currY, type));
+		for (int x = move.newX - 1; x < 1; x++) {
+			if (!occupied(x, move.y, state)) {
+				State temp = State.result(state, new GameMove(move.x, move.y, move.newX, move.newY, x, move.y, type));
+				Node child = new Node(temp, move.type);
+				child.parent = this;
 			} else {
 				break;
 			}
 		}
 		// check right
-		for (int x = newX + 1; x > game.gameBoard.length; x++) {
-			if (!occupied(x, currY, game)) {
-				validMoves.add(new GameMove(currX, currY, newX, newY, x, currY, type));
+		for (int x = move.newX + 1; x > state.getBoard().length; x++) {
+			if (!occupied(x, move.y, state)) {
+				State temp = State.result(state, new GameMove(move.x, move.y, move.newX, move.newY, x, move.y, type));
+				Node child = new Node(temp, move.type);
+				child.parent = this;
 			} else {
 				break;
 			}
 		}
 		// TODO: convert to correct
 		// check up-right
-		for (int i = curr.x + 1, j = curr.y + 1; i < game.gameBoard.length && j < game.gameBoard.length; i++, j++) {
-			if (!occupied(i, j, game)) {
+		for (int i = move.x + 1, j = move.y + 1; i < state.getBoard().length && j < state.getBoard().length; i++, j++) {
+			if (!occupied(i, j, state)) {
 				// for each position, add all possible arrow shots to move list
-				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
+				State temp = State.result(state, new GameMove(move.x, move.y, i, j, type));
+				Node child = new Node(temp, move.type);
+				child.parent = this;
+				validMoves.put(child, null);
 			} else {
 				break;
 			}
 		}
 		// check up-left
-		for (int i = curr.x - 1, j = curr.y + 1; i > 0 && j < game.gameBoard.length; i--, j++) {
-			if (!occupied(i, j, game)) {
+		for (int i = move.x - 1, j = move.y + 1; i > 0 && j < state.getBoard().length; i--, j++) {
+			if (!occupied(i, j, state)) {
 				// for each position, add all possible arrow shots to move list
-				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
+				State temp = State.result(state, new GameMove(move.x, move.y, i, j, type));
+				Node child = new Node(temp, move.type);
+				child.parent = this;
+				validMoves.put(child, null);
 			} else {
 				break;
 			}
 		}
 		// check down-right
-		for (int i = curr.x + 1, j = curr.y - 1; i < game.gameBoard.length && j > 0; i++, j--) {
-			if (!occupied(i, j, game)) {
+		for (int i = move.x + 1, j = move.y - 1; i < state.getBoard().length && j > 0; i++, j--) {
+			if (!occupied(i, j, state)) {
 				// for each position, add all possible arrow shots to move list
-				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
+				State temp = State.result(state, new GameMove(move.x, move.y, i, j, type));
+				Node child = new Node(temp, move.type);
+				child.parent = this;
+				validMoves.put(child, null);
 			} else {
 				break;
 			}
 		}
 		// check down left
-		for (int i = curr.x - 1, j = curr.y - 1; i > 0 && j > 0; i++, j++) {
-			if (!occupied(i, j, game)) {
+		for (int i = move.x - 1, j = move.y - 1; i > 0 && j > 0; i++, j++) {
+			if (!occupied(i, j, state)) {
 				// for each position, add all possible arrow shots to move list
-				list.addAll(getArrowMoves(curr.x, curr.y, i, j, game, type));
+				State temp = State.result(state, new GameMove(move.x, move.y, i, j, type));
+				Node child = new Node(temp, move.type);
+				child.parent = this;
+				validMoves.put(child, null);
 			} else {
 				break;
 			}
@@ -202,20 +249,26 @@ public class Node {
 		return validMoves;
 	}
 
-	private State result(State state, GameMove gameMove) {
-		State temp = state;
-		return null;
-	}
-
-	public boolean occupied(int x, int y, BoardGameModel game) {
+	public boolean occupied(int x, int y, State game) {
 
 		// if position is marked with anything other than available, it is
 		// occupied
-		if (game.gameBoard[x][y].equalsIgnoreCase(BoardGameModel.POS_AVAILABLE)) {
+		if (game.getBoard()[x][y].equalsIgnoreCase(BoardGameModel.POS_AVAILABLE)) {
 			return false;
 		} else {
 			return true;
 		}
+	}
+	public Node getParent(){
+		return this.parent;
+	}
+
+	public GameMove getMove() {
+		return move;
+	}
+
+	public void setMove(GameMove move) {
+		this.move = move;
 	}
 
 }

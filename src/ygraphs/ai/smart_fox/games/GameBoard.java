@@ -28,13 +28,13 @@ public class GameBoard extends JPanel {
 	int c = 0;
 
 	Jose game = null;
-	private BoardGameModel gameModel = null;
+	private State gameModel = null;
 
 	boolean playerAMove;
 	
 	public GameBoard(Jose game) {
 		this.game = game;
-		gameModel = new BoardGameModel(this.rows + 1, this.cols + 1);
+		gameModel = new State(this.rows + 1, this.cols + 1);
 		init(true);
 	}
 
@@ -47,15 +47,15 @@ public class GameBoard extends JPanel {
 		tagB = BoardGameModel.POS_MARKED_BLACK;
 		tagW = BoardGameModel.POS_MARKED_WHITE;
 
-		gameModel.gameBoard[1][4] = tagW;
-		gameModel.gameBoard[1][7] = tagW;
-		gameModel.gameBoard[3][1] = tagW;
-		gameModel.gameBoard[3][10] = tagW;
+		gameModel.getBoard()[1][4] = tagW;
+		gameModel.getBoard()[1][7] = tagW;
+		gameModel.getBoard()[3][1] = tagW;
+		gameModel.getBoard()[3][10] = tagW;
 
-		gameModel.gameBoard[8][1] = tagB;
-		gameModel.gameBoard[8][10] = tagB;
-		gameModel.gameBoard[10][4] = tagB;
-		gameModel.gameBoard[10][7] = tagB;
+		gameModel.getBoard()[8][1] = tagB;
+		gameModel.getBoard()[8][10] = tagB;
+		gameModel.getBoard()[10][4] = tagB;
+		gameModel.getBoard()[10][7] = tagB;
 	}
 	
 
@@ -79,7 +79,7 @@ public class GameBoard extends JPanel {
 
 		System.out.println(qrow + ", " + qcol + ", " + arow + ", " + acol + ", " + qfr + ", " + qfc);
 
-		boolean valid = gameModel.positionMarked(qrow, qcol, arow, acol, qfr, qfc, opponentMove);
+		boolean valid = gameModel.positionMarked(new GameMove(qfr, qfc, qrow, qcol, arow, acol, null));
 		repaint();
 		return valid;
 	}
@@ -101,17 +101,17 @@ public class GameBoard extends JPanel {
 
 				posY = (9 - r) * cellDim + offset;
 
-				if (gameModel.gameBoard[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_AVAILABLE)) {
+				if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_AVAILABLE)) {
 					g.clearRect(posX + 1, posY + 1, 49, 49);
 				}
 
-				if (gameModel.gameBoard[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_MARKED_BLACK)) {
+				if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_MARKED_BLACK)) {
 					g.fillOval(posX, posY, 50, 50);
-				} else if (gameModel.gameBoard[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_MARKED_ARROW)) {
+				} else if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_MARKED_ARROW)) {
 					g.clearRect(posX + 1, posY + 1, 49, 49);
 					g.drawLine(posX, posY, posX + 50, posY + 50);
 					g.drawLine(posX, posY + 50, posX + 50, posY);
-				} else if (gameModel.gameBoard[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_MARKED_WHITE)) {
+				} else if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_MARKED_WHITE)) {
 					g.drawOval(posX, posY, 50, 50);
 				}
 			}
