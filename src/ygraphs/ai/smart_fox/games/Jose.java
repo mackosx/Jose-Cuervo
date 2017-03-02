@@ -14,12 +14,13 @@ import ygraphs.ai.smart_fox.games.AmazonsGameMessage;
 import ygraphs.ai.smart_fox.games.GameClient;
 import ygraphs.ai.smart_fox.games.GamePlayer;
 
-public class Jose extends GamePlayer {
+public class Jose extends GamePlayer implements Runnable {
 	private GameClient gameClient;
 	private JFrame guiFrame = null;
 	private GameBoard board = null;
 	private boolean gameStarted = false;
 	public String usrName = null;
+	public String colour;
 	int turnCount;
 	public GameMove bestMove;
 	int limit;
@@ -27,30 +28,43 @@ public class Jose extends GamePlayer {
 	public Jose(String name, String password) {
 		turnCount = 0;
 		this.usrName = name;
-		
+
 		setupGUI();
 		connectToServer(name, password); // server connection
 	}
 
-
 	/**
 	 * Sends the best move to the server
+	 * 
 	 * @param move
-	 * 		best move picked
+	 *            best move picked
 	 */
-	public void aiMove (GameMove move){
-		int[] current = {move.x, move.y};
-		int[] newPos = {move.newX, move.newY};
-		int[] arrowPos = {move.arrowX, move.arrowY};
-		
+	public void aiMove(GameMove move) {
+		int[] current = { move.x, move.y };
+		int[] newPos = { move.newX, move.newY };
+		int[] arrowPos = { move.arrowX, move.arrowY };
+
 		this.gameClient.sendMoveMessage(current, newPos, arrowPos);
 	}
-	
-	public void ID(){
-		
+	public int minDistance(Node s){
+		//placeholder functon for eval
+		return 0;
 	}
+
+	/**
+	 * iterative deepening
+	 */
+	public void ID() {
+		int depth = 0;
+		while (depth < 2) {
+			bestMove = alphaBeta(new Node(this.board.getState(), this.colour), depth);
+			aiMove(bestMove);
+			depth++;
+		}
+	}
+
 	public GameMove alphaBeta(Node s, int limit) { // returns an action
-		int v = maxValue(s, Integer.MIN_VALUE, Integer.MAX_VALUE, limit);
+		maxValue(s, Integer.MIN_VALUE, Integer.MAX_VALUE, limit);
 		return s.getMove();
 	}
 
@@ -58,17 +72,24 @@ public class Jose extends GamePlayer {
 	 * 
 	 * @return max value of a node, based on alpha-beta
 	 */
-	public int maxValue(Node s, int alpha, int beta, int limit) { 
+	int bestScore;
+
+	public int maxValue(Node s, int alpha, int beta, int limit) {
 		if (limit == 0)
 			return minDistance(s);
 		int v = Integer.MIN_VALUE;
-		for (Node child : s.getChildren()) {
-			v = Math.max(v, minValue(State.result(s.state(), child), alpha, beta));
-			if (v >= alpha)
+		limit--;
+		for (Node child : s.getChildren().keySet()) {
+			v = Math.max(v, minValue(child, alpha, beta, limit));
+			if (v >= alpha){
+				bestMove = child.getMove();
 				return v;
+			}
 			alpha = Math.max(alpha, v);
+			bestMove = child.getMove();
 			return v;
 		}
+		return -1;
 	}
 
 	/**
@@ -80,18 +101,22 @@ public class Jose extends GamePlayer {
 	 * @return 
 	 * 		returns utility value for minimizing player
 	 */
-	
-	public GameMove minValue(Node s,int alpha, int beta, int limit){ 
-		if(depth == limit)
+	public int minValue(Node s,int alpha, int beta, int limit){ 
+		if(limit == 0)
 			return minDistance(s);
 		int v = Integer.MAX_VALUE;
-		for (Node child : s.getChildren(){
-			v =Math.min(v, maxValue(State.result(s.state(), child.), alpha, beta));
-			if (v <= alpha)
-				return bestMove;
+		limit--;
+		for (Node child : s.getChildren().keySet()){
+			v =Math.min(v, maxValue(child, alpha, beta, limit));
+			if (v <= alpha){
+				bestMove = child.getMove();
+				return v;
+			}
 			beta = Math.min(beta, v);
-			return bestMove;
+			bestMove = child.getMove();
+			return v;
 		}
+		return -1;
 	}
 
 	// create interface
@@ -138,10 +163,15 @@ public class Jose extends GamePlayer {
 		if (messageType.equals(GameMessage.GAME_ACTION_START)) {
 			if (((String) msgDetails.get("player-black")).equals(this.userName())) {
 				System.out.println("Game State: " + msgDetails.get("player-black"));
+				this.colour = "black";
+				ID();
+			} else {
+				this.colour = "white";
 			}
 
 		} else if (messageType.equals(GameMessage.GAME_ACTION_MOVE)) {
 			handleOpponentMove(msgDetails);
+			ID();
 		}
 		return true;
 	}
@@ -149,7 +179,7 @@ public class Jose extends GamePlayer {
 	/**
 	 * 
 	 * @param msgDetails
-	 *            contains information from the server
+	 *            - contains information from the server
 	 */
 
 	@SuppressWarnings("unchecked")
@@ -179,7 +209,14 @@ public class Jose extends GamePlayer {
 	}
 
 	public static void main(String[] args) {
-		// instantiates new AI Player
-		Jose game = new Jose("mack", "pass");
+		Thread timer = new Thread(new Jose("mack", "pass"));
+		
 	}
+
+	@Override
+	public void run() {
+		Jose game = new Jose("mack", "pass");
+
+	}
+
 }

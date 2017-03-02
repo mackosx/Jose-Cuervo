@@ -37,6 +37,9 @@ public class GameBoard extends JPanel {
 		gameModel = new State(this.rows + 1, this.cols + 1);
 		init(true);
 	}
+	public State getState(){
+		return gameModel;
+	}
 
 
 
