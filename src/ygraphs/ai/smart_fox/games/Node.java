@@ -37,11 +37,14 @@ public class Node {
 		return validMoves;
 	}
 
-	public int[][] getQueens() {
+	public int[][] getQueens(boolean opposite) {
+		//If opposite = true, will return location of opposite queens
+		String colour = this.type;
+		if(opposite)colour = colour.equalsIgnoreCase("white") ? "black" : "white";
 		int counter = 0;
 		for (int i = 0; i < state.getBoard().length; i++) {
 			for (int j = 0; j < state.getBoard()[0].length; j++) {
-				if (this.state.getBoard()[i][j] == this.type) {
+				if (this.state.getBoard()[i][j] == colour) {
 					queenLocations[counter][0] = i;
 					queenLocations[counter][1] = j;
 					counter++;

@@ -27,12 +27,12 @@ public class GameBoard extends JPanel {
 	int r = 0;
 	int c = 0;
 
-	Jose game = null;
+	Amazon game = null;
 	private State gameModel = null;
 
 	boolean playerAMove;
 	
-	public GameBoard(Jose game) {
+	public GameBoard(Amazon game) {
 		this.game = game;
 		gameModel = new State(this.rows + 1, this.cols + 1);
 		init(true);

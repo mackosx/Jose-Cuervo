@@ -44,7 +44,7 @@ public class Amazon extends GamePlayer {
 		this.usrName = name;
 		setupGUI();
 
-		connectToServer(name, passwd);
+		//connectToServer(name, passwd);
 	}
 
 	
