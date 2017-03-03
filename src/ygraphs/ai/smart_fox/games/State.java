@@ -53,6 +53,10 @@ public class State extends GameModel {
 	}
 
 	// get method for board
+	public void setBoardLocation(int x, int y, String text) {
+		this.board[x][y] = text;
+	}
+
 	public String[][] getBoard() {
 		return this.board;
 	}

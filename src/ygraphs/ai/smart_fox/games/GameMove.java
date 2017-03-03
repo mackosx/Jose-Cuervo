@@ -8,8 +8,6 @@ public class GameMove {
 	String type;// black queen, arrow, available, etc.
 	int arrowX;
 	int arrowY;
-	
-	
 
 	public GameMove(int x, int y, int newX, int newY, String type) {
 		this.type = type;

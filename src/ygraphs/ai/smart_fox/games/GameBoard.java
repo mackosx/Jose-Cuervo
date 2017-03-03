@@ -6,8 +6,6 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
-import ygraphs.ai.smart_fox.games.BoardGameModel;
-
 /**
  * @author mackosx
  */
@@ -31,36 +29,34 @@ public class GameBoard extends JPanel {
 	private State gameModel = null;
 
 	boolean playerAMove;
-	
+
 	public GameBoard(Jose game) {
 		this.game = game;
 		gameModel = new State(this.rows + 1, this.cols + 1);
 		init(true);
 	}
-	public State getState(){
+
+	public State getState() {
 		return gameModel;
 	}
-
-
 
 	public void init(boolean isPlayerA) {
 		String tagB = null;
 		String tagW = null;
 
-		tagB = BoardGameModel.POS_MARKED_BLACK;
-		tagW = BoardGameModel.POS_MARKED_WHITE;
+		tagB = State.POS_MARKED_BLACK;
+		tagW = State.POS_MARKED_WHITE;
 
-		gameModel.getBoard()[1][4] = tagW;
-		gameModel.getBoard()[1][7] = tagW;
-		gameModel.getBoard()[3][1] = tagW;
-		gameModel.getBoard()[3][10] = tagW;
+		gameModel.setBoardLocation(1, 4, tagW);
+		gameModel.setBoardLocation(1, 7, tagW);
+		gameModel.setBoardLocation(3, 1, tagW);
+		gameModel.setBoardLocation(3, 10, tagW);
 
-		gameModel.getBoard()[8][1] = tagB;
-		gameModel.getBoard()[8][10] = tagB;
-		gameModel.getBoard()[10][4] = tagB;
-		gameModel.getBoard()[10][7] = tagB;
+		gameModel.setBoardLocation(8, 1, tagB);
+		gameModel.setBoardLocation(8, 10, tagB);
+		gameModel.setBoardLocation(10, 4, tagB);
+		gameModel.setBoardLocation(10, 7, tagB);
 	}
-	
 
 	/**
 	 * repaint the part of the board
@@ -104,27 +100,28 @@ public class GameBoard extends JPanel {
 
 				posY = (9 - r) * cellDim + offset;
 
-				if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_AVAILABLE)) {
+				if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(State.POS_AVAILABLE)) {
 					g.clearRect(posX + 1, posY + 1, 49, 49);
 				}
 
-				if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_MARKED_BLACK)) {
+				if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(State.POS_MARKED_BLACK)) {
 					g.fillOval(posX, posY, 50, 50);
-				} else if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_MARKED_ARROW)) {
+				} else if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(State.POS_MARKED_ARROW)) {
 					g.clearRect(posX + 1, posY + 1, 49, 49);
 					g.drawLine(posX, posY, posX + 50, posY + 50);
 					g.drawLine(posX, posY + 50, posX + 50, posY);
-				} else if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_MARKED_WHITE)) {
+				} else if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(State.POS_MARKED_WHITE)) {
 					g.drawOval(posX, posY, 50, 50);
 				}
 			}
 		}
 
-	}// method
+	}
+	
 
 	// JComponent method
 	public Dimension getPreferredSize() {
 		return new Dimension(750, 500);
 	}
 
-}// end 
+}// end

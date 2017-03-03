@@ -2,8 +2,9 @@ package ygraphs.ai.smart_fox.games;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Map;
 
 import javax.swing.Box;
@@ -30,6 +31,11 @@ public class Jose extends GamePlayer implements Runnable {
 		this.usrName = name;
 
 		setupGUI();
+		guiFrame.addWindowListener(new WindowAdapter() {
+			  public void windowClosing(WindowEvent e) {
+				  System.exit(0);
+			  }
+			});
 		connectToServer(name, password); // server connection
 	}
 
@@ -46,8 +52,9 @@ public class Jose extends GamePlayer implements Runnable {
 
 		this.gameClient.sendMoveMessage(current, newPos, arrowPos);
 	}
-	public int minDistance(Node s){
-		//placeholder functon for eval
+
+	public int minDistance(Node s) {
+		// placeholder functon for eval
 		return 0;
 	}
 
@@ -56,11 +63,9 @@ public class Jose extends GamePlayer implements Runnable {
 	 */
 	public void ID() {
 		int depth = 0;
-		while (depth < 2) {
-			bestMove = alphaBeta(new Node(this.board.getState(), this.colour), depth);
-			aiMove(bestMove);
-			depth++;
-		}
+		bestMove = alphaBeta(new Node(this.board.getState(), this.colour), depth);
+		System.out.println("found move.");
+		aiMove(bestMove);
 	}
 
 	public GameMove alphaBeta(Node s, int limit) { // returns an action
@@ -81,7 +86,7 @@ public class Jose extends GamePlayer implements Runnable {
 		limit--;
 		for (Node child : s.getChildren().keySet()) {
 			v = Math.max(v, minValue(child, alpha, beta, limit));
-			if (v >= alpha){
+			if (v >= alpha) {
 				bestMove = child.getMove();
 				return v;
 			}
@@ -98,17 +103,16 @@ public class Jose extends GamePlayer implements Runnable {
 	 * @param alpha
 	 * @param beta
 	 * @param limit
-	 * @return 
-	 * 		returns utility value for minimizing player
+	 * @return returns utility value for minimizing player
 	 */
-	public int minValue(Node s,int alpha, int beta, int limit){ 
-		if(limit == 0)
+	public int minValue(Node s, int alpha, int beta, int limit) {
+		if (limit == 0)
 			return minDistance(s);
 		int v = Integer.MAX_VALUE;
 		limit--;
-		for (Node child : s.getChildren().keySet()){
-			v =Math.min(v, maxValue(child, alpha, beta, limit));
-			if (v <= alpha){
+		for (Node child : s.getChildren().keySet()) {
+			v = Math.min(v, maxValue(child, alpha, beta, limit));
+			if (v <= alpha) {
 				bestMove = child.getMove();
 				return v;
 			}
@@ -148,6 +152,7 @@ public class Jose extends GamePlayer implements Runnable {
 	public void onLogin() {
 		ArrayList<String> rooms = gameClient.getRoomList();
 		this.gameClient.joinRoom(rooms.get(6));
+		System.out.println("Logged in");
 	}
 
 	/**
@@ -160,6 +165,7 @@ public class Jose extends GamePlayer implements Runnable {
 	 */
 	@Override
 	public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
+		System.out.println("handle game message called: " + messageType);
 		if (messageType.equals(GameMessage.GAME_ACTION_START)) {
 			if (((String) msgDetails.get("player-black")).equals(this.userName())) {
 				System.out.println("Game State: " + msgDetails.get("player-black"));
@@ -210,8 +216,9 @@ public class Jose extends GamePlayer implements Runnable {
 
 	public static void main(String[] args) {
 		Thread timer = new Thread(new Jose("mack", "pass"));
-		
+
 	}
+	
 
 	@Override
 	public void run() {
