@@ -39,6 +39,7 @@ public class Node {
 
 	public int[][] getQueens(boolean opposite) {
 		//If opposite = true, will return location of opposite queens
+		int[][] queens = new int[4][2];
 		String colour = this.type;
 		if(opposite)colour = colour.equalsIgnoreCase("white") ? "black" : "white";
 		int counter = 0;
@@ -47,11 +48,13 @@ public class Node {
 				if (this.state.getBoard()[i][j] == colour) {
 					queenLocations[counter][0] = i;
 					queenLocations[counter][1] = j;
+					queens[counter][0] = i;
+					queens[counter][1] = j;
 					counter++;
 				}
 			}
 		}
-		return this.queenLocations;
+		return queens;
 	}
 
 	/**

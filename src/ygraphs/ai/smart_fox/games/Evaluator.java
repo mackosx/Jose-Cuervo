@@ -1,72 +1,98 @@
 package ygraphs.ai.smart_fox.games;
 
-import java.util.HashMap;
-
-import ygraphs.ai.smart_fox.games.Amazon;
-import ygraphs.ai.smart_fox.games.BoardGameModel;
-import ygraphs.ai.smart_fox.games.GameBoard;
-
-//import p1.BoardGameModel;
-//import p1.GameBoard;
-
 public class Evaluator {
-
-	public static void main(String[] args) {
-		// Create the state
-		State maz = new State(10, 10);
-
-		// Initialize the starting positions
-		maz.init(false);
-
-		// Test node, white
-		Node testNode = new Node(maz, "black");
-
-		// Test of the evaluator class
-		Evaluator ev = new Evaluator();
-
-		// Passing evaluator a test node
-		ev.minDistance(testNode);
-	}
 
 	public Evaluator() {
 		// Constructor
 	}
-
-	public int minDistance(Node n) {
+	
+	/**
+	 * @param n = node to examine
+	 * @return returns 2d array mapping each point to its closest queen
+	 */
+	public String[][] minDistance(Node n) {
 		// 1. for each point p, compare db = dist(p,Black) and dw =
 		// dist(p,White);
 		// 2. if db < dw: Black point;
 		// 3. else if db > dw: White point;
 		// 4. else point is neutral.
-
 		State boardstate = n.state();
 		String[][] board = boardstate.getBoard();
-		int[][] ourQueenies = n.getQueens(false);
-		int[][] theirQueenies = n.getQueens(true);
-
+		int[][] black = n.getQueens(true);
+		int[][] white = n.getQueens(false);
+		String[][] map = board.clone();
+		
 		// Evaluate board for each queen
-		int db = 0;
-		int dw = 0;
-		int column = 0;
+		int row = 0;
 		for (String[] i : board) {
-			int row = 0;
+			int column = 0;
 			for (String j : i) {
-				// If string = "available" compute the distance (number of moves) to the nearest queen of each colour
 				if (j.equalsIgnoreCase("available")) {
-					// Current board location
-					System.out.println("["+row+"]"+"["+column+"]");
-					
-				}
-				row++;
+					map[row][column] = dist(row, column, black, white);
+				} 	
+				column++;
 			}
-			column++;
+			row++;
 		}
-		return 0;
+		return map;
 	}
-	
-	public int dist(int qr, int qc, int qfr, int qfc){
-		//Ignoring arrows to 
-		return 0;
+
+	/**
+	 * @param cr = row idx of current point (current row)
+	 * @param cc = column idx of current point (current column)
+	 * @param black = 2d array supplying row and column of all black queens
+	 * @param white = 2d array supplying row and column of all white queens
+	 * @return returns the color of the queen closest to the supplied point
+	 */
+	public String dist(int cr, int cc, int[][] black, int[][] white) {
+		int dw, minDW, db, minDB;
+		dw = minDW = db = minDB = Integer.MAX_VALUE;
+			
+		// Determine nearest white
+		for (int[] i : white) {
+			int qr = i[0];
+			int qc = i[1];
+			if (!((qc == cc) && (cr == qr))) {
+				if (qc == cc) {
+					dw = Math.abs(qr - cr);
+				} else if (qr == cr) {
+					dw = Math.abs(qc - cc);
+				} else if (((qr + qc) == (cr + cc)) || ((Math.abs(qr - qc)) == (Math.abs(cr - cc)))) {
+					dw = Math.abs(qc - cc);
+				} 
+			}
+
+			if (dw < minDW) {
+				minDW = dw;
+			}
+		}
+
+		// Determine nearest black
+		for (int[] j : black) {
+			int qr = j[0];
+			int qc = j[1];
+			if (!((qc == cc) && (cr == qr))) {
+				if (qc == cc) {
+					db = Math.abs(qr - cr);
+				} else if (qr == cr) {
+					db = Math.abs(qc - cc);
+				} else if ((qr + qc) == (cr + cc)) {
+					db = Math.abs(qc - cc);
+				}
+			}
+
+			if (db < minDB) {
+				minDB = db;
+			}
+		}
+
+		if (minDB < minDW) {
+			return "black";
+		} else if (minDB > minDW) {
+			return "white";
+		} else {
+			return "neutral";
+		}
 	}
 
 }
