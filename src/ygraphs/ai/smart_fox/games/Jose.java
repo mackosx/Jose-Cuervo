@@ -15,7 +15,7 @@ import ygraphs.ai.smart_fox.games.AmazonsGameMessage;
 import ygraphs.ai.smart_fox.games.GameClient;
 import ygraphs.ai.smart_fox.games.GamePlayer;
 
-public class Jose extends GamePlayer implements Runnable {
+public class Jose extends GamePlayer {
 	private GameClient gameClient;
 	private JFrame guiFrame = null;
 	private GameBoard board = null;
@@ -25,8 +25,10 @@ public class Jose extends GamePlayer implements Runnable {
 	int turnCount;
 	public GameMove bestMove;
 	int limit;
+	long startTime;
 
 	public Jose(String name, String password) {
+		startTime = System.currentTimeMillis();
 		turnCount = 0;
 		this.usrName = name;
 
@@ -54,20 +56,38 @@ public class Jose extends GamePlayer implements Runnable {
 	}
 
 	public int minDistance(Node s) {
-		// placeholder functon for eval
+		// placeholder function for eval
 		return 0;
 	}
 
+	
+	public boolean timeLeft(){
+		if(startTime - System.currentTimeMillis() < 29000){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 	/**
 	 * iterative deepening
 	 */
+	
 	public void ID() {
-		int depth = 0;
+		System.out.println("started ID.");
+		int depth = 1;
+		this.colour = "white";
 		bestMove = alphaBeta(new Node(this.board.getState(), this.colour), depth);
-		System.out.println("found move.");
+		System.out.println(bestMove.toString());
 		aiMove(bestMove);
 	}
 
+	/**
+	 * 
+	 * @param s 	starting node being evaluated
+	 * @param limit	depth to search at
+	 * @return		best move from a-B pruning
+	 */
 	public GameMove alphaBeta(Node s, int limit) { // returns an action
 		maxValue(s, Integer.MIN_VALUE, Integer.MAX_VALUE, limit);
 		return s.getMove();
@@ -80,11 +100,14 @@ public class Jose extends GamePlayer implements Runnable {
 	int bestScore;
 
 	public int maxValue(Node s, int alpha, int beta, int limit) {
-		if (limit == 0)
-			return minDistance(s);
+		if (limit == 0){
+			s.hValue = minDistance(s);
+			return s.hValue;
+		}
+			
 		int v = Integer.MIN_VALUE;
 		limit--;
-		for (Node child : s.getChildren().keySet()) {
+		for (Node child : s.getChildren()) {
 			v = Math.max(v, minValue(child, alpha, beta, limit));
 			if (v >= alpha) {
 				bestMove = child.getMove();
@@ -110,7 +133,7 @@ public class Jose extends GamePlayer implements Runnable {
 			return minDistance(s);
 		int v = Integer.MAX_VALUE;
 		limit--;
-		for (Node child : s.getChildren().keySet()) {
+		for (Node child : s.getChildren()) {
 			v = Math.min(v, maxValue(child, alpha, beta, limit));
 			if (v <= alpha) {
 				bestMove = child.getMove();
@@ -214,16 +237,14 @@ public class Jose extends GamePlayer implements Runnable {
 		return usrName;
 	}
 
-	public static void main(String[] args) {
-		Thread timer = new Thread(new Jose("mack", "pass"));
-
+	public static void main(String[] args)  {
+		
+		Jose jose = new Jose("mack", "pass");
+	
+		
 	}
 	
 
-	@Override
-	public void run() {
-		Jose game = new Jose("mack", "pass");
 
-	}
 
 }

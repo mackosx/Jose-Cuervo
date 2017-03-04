@@ -32,7 +32,7 @@ public class GameBoard extends JPanel {
 
 	public GameBoard(Jose game) {
 		this.game = game;
-		gameModel = new State(this.rows + 1, this.cols + 1);
+		gameModel = new State(this.rows, this.cols);
 		init(true);
 	}
 
@@ -47,15 +47,15 @@ public class GameBoard extends JPanel {
 		tagB = State.POS_MARKED_BLACK;
 		tagW = State.POS_MARKED_WHITE;
 
-		gameModel.setBoardLocation(1, 4, tagW);
-		gameModel.setBoardLocation(1, 7, tagW);
-		gameModel.setBoardLocation(3, 1, tagW);
-		gameModel.setBoardLocation(3, 10, tagW);
+		gameModel.setBoardLocation(0, 3, tagW);
+		gameModel.setBoardLocation(0, 6, tagW);
+		gameModel.setBoardLocation(2, 0, tagW);
+		gameModel.setBoardLocation(2, 9, tagW);
 
-		gameModel.setBoardLocation(8, 1, tagB);
-		gameModel.setBoardLocation(8, 10, tagB);
-		gameModel.setBoardLocation(10, 4, tagB);
-		gameModel.setBoardLocation(10, 7, tagB);
+		gameModel.setBoardLocation(7, 0, tagB);
+		gameModel.setBoardLocation(7, 9, tagB);
+		gameModel.setBoardLocation(9, 3, tagB);
+		gameModel.setBoardLocation(9, 6, tagB);
 	}
 
 	/**
@@ -100,17 +100,19 @@ public class GameBoard extends JPanel {
 
 				posY = (9 - r) * cellDim + offset;
 
-				if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(State.POS_AVAILABLE)) {
+				if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_AVAILABLE)) {
 					g.clearRect(posX + 1, posY + 1, 49, 49);
 				}
 
-				if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(State.POS_MARKED_BLACK)) {
+				if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_BLACK)) {
+					g.clearRect(posX + 1, posY + 1, 49, 49);
 					g.fillOval(posX, posY, 50, 50);
-				} else if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(State.POS_MARKED_ARROW)) {
+				} else if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_ARROW)) {
 					g.clearRect(posX + 1, posY + 1, 49, 49);
 					g.drawLine(posX, posY, posX + 50, posY + 50);
 					g.drawLine(posX, posY + 50, posX + 50, posY);
-				} else if (gameModel.getBoard()[r + 1][c + 1].equalsIgnoreCase(State.POS_MARKED_WHITE)) {
+				} else if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_WHITE)) {
+					g.clearRect(posX + 1, posY + 1, 49, 49);
 					g.drawOval(posX, posY, 50, 50);
 				}
 			}

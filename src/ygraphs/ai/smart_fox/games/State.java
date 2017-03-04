@@ -1,5 +1,13 @@
 package ygraphs.ai.smart_fox.games;
 
+/**
+ * 
+ * 
+ * @author macke Class containing board as string[][] support new locations, and
+ *         generating new boards from actions
+ *
+ */
+
 public class State extends GameModel {
 	// constants for board marking
 	public static final String POS_MARKED_BLACK = "black";
@@ -40,14 +48,14 @@ public class State extends GameModel {
 
 	// receives a move and a state, then executes the move on the state and
 	// returns a new board
-	public static State result(State state, GameMove move) {
+	public State result(State state, GameMove move) {
 		State newState = new State(state.rows, state.columns);
 		for (int i = 0; i < state.board.length; i++) {
 			for (int j = 0; j < state.board[0].length; j++) {
 				newState.board[i][j] = state.board[i][j];
 			}
 		}
-		newState.positionMarked(move);
+		System.out.println(newState.positionMarked(move));
 		return newState;
 
 	}
@@ -59,5 +67,31 @@ public class State extends GameModel {
 
 	public String[][] getBoard() {
 		return this.board;
+	}
+
+	public String toString() {
+		String b = "";
+
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[0].length; j++) {
+				switch(this.board[i][j]){
+					case "white":
+						b+="|W";
+						break;
+					case "black":
+						b+="|B";
+						break;
+					case "arrow":
+						b+="|+";
+						break;
+					case "available":
+						b+="| ";
+						break;
+				}
+			}
+			b += "\n";
+		}
+
+		return b;
 	}
 }
