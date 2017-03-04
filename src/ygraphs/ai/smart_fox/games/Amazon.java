@@ -44,14 +44,10 @@ public class Amazon extends GamePlayer {
 		this.usrName = name;
 		setupGUI();
 
-		connectToServer(name, passwd);
+		//connectToServer(name, passwd);
 	}
 
-	private void connectToServer(String name, String passwd) {
-		// create a client and use "this" class (a GamePlayer) as the delegate.
-		// the client will take care of the communication with the server.
-		gameClient = new GameClient(name, passwd, this);
-	}
+	
 
 	@Override
 	/**
@@ -190,9 +186,6 @@ public class Amazon extends GamePlayer {
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		// Amazon game = new Amazon("yong.gao", "cosc322");
-		Amazon game = new Amazon("mack", "pass");
-	}
+	
 
 }// end of Amazon
