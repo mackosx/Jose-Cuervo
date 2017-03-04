@@ -25,12 +25,17 @@ public class GameBoard extends JPanel {
 	int r = 0;
 	int c = 0;
 
-	Jose game = null;
+	Amazon game = null;
 	private State gameModel = null;
 
 	boolean playerAMove;
+<<<<<<< HEAD
 
 	public GameBoard(Jose game) {
+=======
+
+
+>>>>>>> a4f2484cd50b215f9bf1fd175a22f27219fbeec5
 		this.game = game;
 		gameModel = new State(this.rows, this.cols);
 		init(true);
@@ -60,7 +65,7 @@ public class GameBoard extends JPanel {
 
 	/**
 	 * repaint the part of the board
-	 * 
+	 *
 	 * @param qrow
 	 *            queen row index
 	 * @param qcol
@@ -119,7 +124,7 @@ public class GameBoard extends JPanel {
 		}
 
 	}
-	
+
 
 	// JComponent method
 	public Dimension getPreferredSize() {

@@ -34,6 +34,7 @@ public class Amazon extends GamePlayer{
 	 * @param name
 	 * @param passwd
 	 */
+<<<<<<< HEAD
     public Amazon(String name, String passwd){  
 	
 	   this.usrName = name;		       	   
@@ -44,6 +45,14 @@ public class Amazon extends GamePlayer{
 			  }
 			});
        connectToServer(name, passwd);        
+=======
+	public Amazon(String name, String passwd) {
+
+		this.usrName = name;
+		setupGUI();
+
+		//connectToServer(name, passwd);
+>>>>>>> a4f2484cd50b215f9bf1fd175a22f27219fbeec5
 	}
 	
     private void connectToServer(String name, String passwd){
