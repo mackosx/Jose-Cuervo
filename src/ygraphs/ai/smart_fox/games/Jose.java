@@ -28,17 +28,20 @@ public class Jose extends GamePlayer {
 	long startTime;
 
 	public Jose(String name, String password) {
+		//set start time for timer
 		startTime = System.currentTimeMillis();
 		turnCount = 0;
 		this.usrName = name;
-
+		// initialize game board gui
 		setupGUI();
+		// exit application if window is closed
 		guiFrame.addWindowListener(new WindowAdapter() {
 			  public void windowClosing(WindowEvent e) {
 				  System.exit(0);
 			  }
 			});
-		connectToServer(name, password); // server connection
+		// server connection
+		connectToServer(name, password); 
 	}
 
 	/**
@@ -165,6 +168,7 @@ public class Jose extends GamePlayer {
 
 		board = createGameBoard();
 		contentPane.add(board, BorderLayout.CENTER);
+		guiFrame.repaint();
 	}
 
 	private GameBoard createGameBoard() {
