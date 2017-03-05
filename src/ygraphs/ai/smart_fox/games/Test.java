@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import junit.framework.*;
 
+@SuppressWarnings("unused")
 public class Test extends TestCase{
 
 //	public void testMoveGen(){

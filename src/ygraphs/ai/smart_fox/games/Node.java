@@ -23,7 +23,7 @@ public class Node {
 		setState(state);
 		validMoves = new LinkedList<Node>();
 		parent = null;
-		getQueens();
+		getQueens(false);
 	}
 
 	public State state() {
@@ -44,7 +44,10 @@ public class Node {
 		//If opposite = true, will return location of opposite queens
 		int[][] queens = new int[4][2];
 		String colour = this.type;
-		if(opposite)colour = colour.equalsIgnoreCase("white") ? "black" : "white";
+		
+		if(opposite)
+			colour = colour.equalsIgnoreCase("white") ? "black" : "white";
+		
 		int counter = 0;
 		for (int i = 0; i < state.getBoard().length; i++) {
 			for (int j = 0; j < state.getBoard()[0].length; j++) {
@@ -71,10 +74,12 @@ public class Node {
 	// testing with all queen
 	public LinkedList<Node> getQueenMoves(State game, String type) {
 		LinkedList<Node> tempList = new LinkedList<Node>();
+		
 		for (int queen = 0; queen < queenLocations.length; queen++) {
-			int currX = getQueens()[queen][0];
-			int currY = getQueens()[queen][1];
+			int currX = getQueens(false)[queen][0];
+			int currY = getQueens(false)[queen][1];
 			System.out.println(currX + ", " + currY);
+			
 			// check above
 			for (int y = currY - 1; y >=0; y--) {
 				if (!occupied(currX, y, currX, currY, game)) {
@@ -85,6 +90,7 @@ public class Node {
 					break;
 				}// 106 moves
 			}
+			
 			// check below
 			for (int y = currY + 1; y < game.getBoard().length; y++) {
 				if (!occupied(currX, y, currX, currY, game)) {
@@ -93,6 +99,7 @@ public class Node {
 					break;
 				}
 			}
+			
 //			// check left
 			for (int x = currX - 1; x >= 0; x--) {
 				if (!occupied(x, currY, currX, currY, game)) {
@@ -101,8 +108,8 @@ public class Node {
 					break;
 				}
 			}
+			
 //			// check right
-			int count = 0;
 			for (int x = currX + 1; x < game.getBoard().length; x++) {
 				if (!occupied(x, currY, currX, currY, game)) {
 					tempList.addAll(getArrowMoves(new GameMove(currX, currY, x, currY, type)));
@@ -110,6 +117,7 @@ public class Node {
 					break;
 				}
 			}
+			
 			// check up-right
 			for (int i = currX + 1, j = currY - 1; i < game.getBoard().length && j >= 0; i++, j--) {
 				if (!occupied(i, j, currX, currY, game)) {
@@ -120,6 +128,7 @@ public class Node {
 					break;
 				}
 			}
+			
 			// check up-left
 			for (int i = currX - 1, j = currY - 1; i >= 0 && j >= 0; i--, j--) {
 				if (!occupied(i, j, currX, currY, game)) {
@@ -130,6 +139,7 @@ public class Node {
 					break;
 				}
 			}
+			
 			// check down-right
 			for (int i = currX + 1, j = currY + 1; i < game.getBoard().length && j < game.getBoard().length; i++, j++) {
 				if (!occupied(i, j, currX, currY, game)) {
@@ -140,6 +150,7 @@ public class Node {
 					break;
 				}
 			}
+			
 			// check down left
 			for (int i = currX - 1, j = currY + 1; i >= 0 && j < game.getBoard().length; i--, j++) {
 				if (!occupied(i, j, currX, currY, game)) {

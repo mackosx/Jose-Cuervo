@@ -89,8 +89,6 @@ public class State extends GameModel {
 
 	public String toString() {
 		String b = "";
-<<<<<<< HEAD
-
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[0].length; j++) {
 				switch(this.board[i][j]){
@@ -110,11 +108,6 @@ public class State extends GameModel {
 			}
 			b += "\n";
 		}
-
-=======
-	
-		}
->>>>>>> a4f2484cd50b215f9bf1fd175a22f27219fbeec5
 		return b;
 	}
 }

@@ -10,7 +10,7 @@ public class Evaluator {
 	 * @param n = node to examine
 	 * @return returns 2d array mapping each point to its closest queen
 	 */
-	public String[][] minDistance(Node n) {
+	public int minDistance(Node n) {
 		// 1. for each point p, compare db = dist(p,Black) and dw =
 		// dist(p,White);
 		// 2. if db < dw: Black point;
@@ -20,21 +20,30 @@ public class Evaluator {
 		String[][] board = boardstate.getBoard();
 		int[][] black = n.getQueens(true);
 		int[][] white = n.getQueens(false);
-		String[][] map = board.clone();
+		//String[][] map = board.clone();
 		
 		// Evaluate board for each queen
+		int opponentScore = 0;
+		int ourScore = 0;
 		int row = 0;
 		for (String[] i : board) {
 			int column = 0;
 			for (String j : i) {
 				if (j.equalsIgnoreCase("available")) {
-					map[row][column] = dist(row, column, black, white);
+					String owned = dist(row, column, black, white);
+					if(owned == Jose.colour){
+						//increment board for for our colour
+						ourScore++;
+					}
+					else if(!owned.equals("neutral")){
+						opponentScore++;
+					}
 				} 	
 				column++;
 			}
 			row++;
 		}
-		return map;
+		return ourScore - opponentScore;
 	}
 
 	/**

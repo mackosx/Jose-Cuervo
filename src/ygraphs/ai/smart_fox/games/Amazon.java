@@ -34,7 +34,6 @@ public class Amazon extends GamePlayer{
 	 * @param name
 	 * @param passwd
 	 */
-<<<<<<< HEAD
     public Amazon(String name, String passwd){  
 	
 	   this.usrName = name;		       	   
@@ -45,15 +44,7 @@ public class Amazon extends GamePlayer{
 			  }
 			});
        connectToServer(name, passwd);        
-=======
-	public Amazon(String name, String passwd) {
-
-		this.usrName = name;
-		setupGUI();
-
-		//connectToServer(name, passwd);
->>>>>>> a4f2484cd50b215f9bf1fd175a22f27219fbeec5
-	}
+    }
 	
     private void connectToServer(String name, String passwd){
     	// create a client and use "this" class (a GamePlayer) as the delegate.
@@ -71,7 +62,7 @@ public class Amazon extends GamePlayer{
 		//once logged in, the gameClient will have  the names of available game rooms  
 		ArrayList<String> rooms = gameClient.getRoomList();
 		this.gameClient.joinRoom(rooms.get(6));	 
-		System.out.println("successful.");
+		System.out.println("Player successfully joined room.");
 	}
     
     
@@ -100,6 +91,7 @@ public class Amazon extends GamePlayer{
 	}
     
 	//handle the event that the opponent makes a move. 
+	@SuppressWarnings("unchecked")
 	private void handleOpponentMove(Map<String, Object> msgDetails){
 		System.out.println("OpponentMove(): " + msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
 		ArrayList<Integer> qcurr = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR);
@@ -386,6 +378,7 @@ public class Amazon extends GamePlayer{
      */
 	public static void main(String[] args) { 
 		//Amazon game = new Amazon("yong.gao", "cosc322");
+		@SuppressWarnings("unused")
 		Amazon game = new Amazon("player1", "pass");		
     }
 	
