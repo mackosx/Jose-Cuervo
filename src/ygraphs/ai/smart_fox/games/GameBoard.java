@@ -3,8 +3,15 @@ package ygraphs.ai.smart_fox.games;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
 
 /**
  * @author mackosx
@@ -100,7 +107,7 @@ public class GameBoard extends JPanel {
 				posX = c * cellDim + offset;
 				posY = r * cellDim + offset;
 
-				posY = (9 - r) * cellDim + offset;
+				//posY = (9 - r) * cellDim + offset;
 
 				if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_AVAILABLE)) {
 					g.clearRect(posX + 1, posY + 1, 49, 49);
@@ -108,14 +115,39 @@ public class GameBoard extends JPanel {
 
 				if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_BLACK)) {
 					g.clearRect(posX + 1, posY + 1, 49, 49);
-					g.fillOval(posX, posY, 50, 50);
+					ImageObserver n = null;
+					BufferedImage img = null;
+					try {
+						img = ImageIO.read(new File("resources/rsz_bq.png"));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					g.drawImage(img, posX + 5, posY + 5, n);
 				} else if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_ARROW)) {
 					g.clearRect(posX + 1, posY + 1, 49, 49);
-					g.drawLine(posX, posY, posX + 50, posY + 50);
-					g.drawLine(posX, posY + 50, posX + 50, posY);
+					//g.drawLine(posX, posY, posX + 50, posY + 50);
+					//g.drawLine(posX, posY + 50, posX + 50, posY);
+					ImageObserver n = null;
+					BufferedImage img = null;
+					try {
+						img = ImageIO.read(new File("resources/rsz_arrow.png"));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					g.drawImage(img, posX + 5, posY + 5, n);
 				} else if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_WHITE)) {
 					g.clearRect(posX + 1, posY + 1, 49, 49);
-					g.drawOval(posX, posY, 50, 50);
+					ImageObserver n = null;
+					BufferedImage img = null;
+					try {
+						img = ImageIO.read(new File("resources/rsz_wq.png"));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					g.drawImage(img, posX + 5, posY + 5, n);
 				}
 			}
 		}

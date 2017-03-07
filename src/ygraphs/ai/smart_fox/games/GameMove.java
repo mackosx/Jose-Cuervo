@@ -1,32 +1,60 @@
 package ygraphs.ai.smart_fox.games;
 
 public class GameMove {
-	int x; // current queen x
-	int y; // current queen y
-	int newX; // new queen x
-	int newY; // new queen y
+	int row; // current queen row
+	int col; // current queen y
+	int newRow; // new queen x
+	int newCol; // new queen y
 	String type;// black queen, arrow, available, etc.
-	int arrowX; // arrow x location
-	int arrowY;// arrow y location
+	int arrowRow; // arrow x location
+	int arrowCol;// arrow y location
 
-	public GameMove(int x, int y, int newX, int newY, String type) {
+	/**
+	 * 
+	 * @param row
+	 * 		current row of queen
+	 * @param col
+	 * 		current column of queen
+	 * @param newRow
+	 * 		new row of queen
+	 * @param newCol
+	 * 		new column of queen
+	 * @param type
+	 */
+	public GameMove(int row, int col, int newRow, int newCol, String type) {
 		this.type = type;
-		this.x = x;
-		this.y = y;
-		this.newX = newX;
-		this.newY = newY;
+		this.row = row;
+		this.col = col;
+		this.newRow = newRow;
+		this.newCol = newCol;
 
 	}
 
-	public GameMove(int x, int y, int newX, int newY, int arrowX, int arrowY, String type) {
-		this(x, y, newX, newY, type);
+	/**
+	 * 
+	 * @param row
+	 * 		current row of queen
+	 * @param col
+	 * 		current column of queen
+	 * @param newRow
+	 * 		new row of queen
+	 * @param newCol
+	 * 		new column of queen
+	 * @param arrowRow
+	 * 		arrow row
+	 * @param arrowCol
+	 * 		arrow column
+	 * @param type
+	 */
+	public GameMove(int row, int col, int newRow, int newCol, int arrowRow, int arrowCol, String type) {
+		this(row, col, newRow, newCol, type);
 
-		this.arrowX = arrowX;
-		this.arrowY = arrowY;
+		this.arrowRow = arrowRow;
+		this.arrowCol = arrowCol;
 
 	}
 	public String toString(){
-		return "Current pos: ("+x+"," + y+")\nNew pos:("+newX+"," + newY+")\nArrow pos: ("+arrowX+","+arrowY+")\n";
+		return "Current pos: ("+row+"," + col+")\nNew pos:("+newRow+"," + newCol+")\nArrow pos: ("+arrowRow+","+arrowCol+")\n";
 	}
 
 }

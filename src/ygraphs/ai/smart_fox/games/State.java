@@ -50,16 +50,16 @@ public class State extends GameModel {
 	// marks a new move on the current instance of state.board
 	public boolean positionMarked(GameMove move) {
 		boolean valid = true;
-		if ((((move.newX >= board.length ? 1 : 0) | (move.newY >= board.length ? 1 : 0)) != 0) || (move.newX <= -1)
-				|| (move.newY <= -1)) {
+		if ((((move.newRow >= board.length ? 1 : 0) | (move.newCol >= board.length ? 1 : 0)) != 0) || (move.newRow <= -1)
+				|| (move.newCol <= -1)) {
 			valid = false;
-		} else if (!board[move.newX][move.newY].equalsIgnoreCase("available")) {
+		} else if (!board[move.newRow][move.newCol].equalsIgnoreCase("available")) {
 			valid = false;
 		}
 
-		board[move.newX][move.newY] = board[move.x][move.y];
-		board[move.x][move.y] = "available";
-		board[move.arrowX][move.arrowY] = "arrow";
+		board[move.newRow][move.newCol] = board[move.row][move.col];
+		board[move.row][move.col] = "available";
+		board[move.arrowRow][move.arrowCol] = "arrow";
 
 		return valid;
 	}
@@ -79,8 +79,8 @@ public class State extends GameModel {
 	}
 
 	// get method for board
-	public void setBoardLocation(int x, int y, String text) {
-		this.board[x][y] = text;
+	public void setBoardLocation(int i, int j, String text) {
+		this.board[i][j] = text;
 	}
 
 	public String[][] getBoard() {

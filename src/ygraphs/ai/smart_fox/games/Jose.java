@@ -7,6 +7,7 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
 
 import javax.swing.Box;
 import javax.swing.JFrame;
@@ -26,7 +27,7 @@ public class Jose extends GamePlayer {
 	int turnCount;
 	public GameMove bestMove;
 	int limit;
-	long startTime;
+	public static long startTime;
 	Evaluator eval;
 
 	public Jose(String name, String password) {
@@ -44,7 +45,9 @@ public class Jose extends GamePlayer {
 		});
 		// server connection
 		connectToServer(name, password);
+		guiFrame.repaint();
 		//ID();
+		
 	}
 
 	/**
@@ -54,14 +57,16 @@ public class Jose extends GamePlayer {
 	 *            best move picked
 	 */
 	public void aiMove(GameMove move) {
-		int[] current = { move.x, move.y };
-		int[] newPos = { move.newX, move.newY };
-		int[] arrowPos = { move.arrowX, move.arrowY };
+		int[] current = { move.row, move.col };
+		int[] newPos = { move.newRow, move.newCol };
+		int[] arrowPos = { move.arrowRow, move.arrowCol };
 
 		this.gameClient.sendMoveMessage(current, newPos, arrowPos);
+		this.board.markPosition(move.newRow, move.newCol, move.arrowRow, move.arrowCol, move.row, move.col, false);
+		guiFrame.repaint();
 	}
 
-	public boolean timeLeft() {
+	public static boolean timeLeft() {
 		if (startTime - System.currentTimeMillis() < 29000) {
 			return true;
 		} else {
@@ -76,12 +81,12 @@ public class Jose extends GamePlayer {
 		System.out.println("started ID.");
 		eval = new Evaluator();
 		int depth = 0;
-		//colour = "white";
+		colour = "white";
 		Node root = new Node(this.board.getState(), colour);
-		while(timeLeft()){
+		//while(timeLeft()){
 			root.hValue = alphaBeta(root, depth);
-			depth++;
-		}
+			//depth++;
+		//}
 		LinkedList<Node> children = root.getChildren();
 		LinkedList<GameMove> bestMoves = new LinkedList<GameMove>();
 		int max = Integer.MIN_VALUE;
@@ -95,7 +100,10 @@ public class Jose extends GamePlayer {
 				bestMoves.add(s.getMove());
 			}
 		}
-		bestMove = bestMoves.get(0);
+		Random r = new Random();
+		int randomIndex = r.nextInt(bestMoves.size());
+		System.out.println(randomIndex);
+		bestMove = bestMoves.get(randomIndex);
 		System.out.println("****BEST MOVE*****"+bestMoves.size()+"\n" + bestMove.toString());
 		aiMove(bestMove);
 	}
@@ -217,6 +225,7 @@ public class Jose extends GamePlayer {
 
 		} else if (messageType.equals(GameMessage.GAME_ACTION_MOVE)) {
 			turnCount++;
+			System.out.println(turnCount);
 			handleOpponentMove(msgDetails);
 			ID();
 		}
