@@ -1,10 +1,7 @@
 package ygraphs.ai.smart_fox.games;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
 
 public class StateSpace {
 	ArrayList<Node> frontier;
@@ -18,18 +15,19 @@ public class StateSpace {
 		State s = new State(10, 10);
 		s.init(true);
 		Node root = new Node(s, "white");
-		frontier = new ArrayList<Node>(4100000);
+		frontier = new ArrayList<Node>(3100000);
 		frontier.addAll(root.getChildren());
 		int initialSize = root.validMoves.size();
 		System.out.println("Cleaning...");
 		clean();
-		System.out.println("to: " + frontier.size());
+		System.out.println("From " + initialSize + " nodes to " + frontier.size());
 		System.out.println("Adding...");
 		add();
-		System.out.println("to: " + frontier.size());
-		System.out.println("Cleaning 2...");
-		clean();
-		System.out.println("From " + initialSize + "to" + frontier.size());
+		int current = frontier.size();
+		System.out.println("Node generated: " + current);
+		//System.out.println("Cleaning 2...");
+		//clean();
+		System.out.println("From " + current + " nodes to " + frontier.size());
 	}
 
 	/**
@@ -54,10 +52,7 @@ public class StateSpace {
 			}
 		}
 		System.out.println("Done removing.");
-//		 System.out.println("Removing all...");
-//		 frontier.removeAll(toBeRemoved);
-//		 System.out.println("removed.");
-//		 toBeRemoved.clear();
+
 
 		LinkedHashSet<Node> map = new LinkedHashSet<Node>(frontier);
 		map.removeAll(toBeRemoved);

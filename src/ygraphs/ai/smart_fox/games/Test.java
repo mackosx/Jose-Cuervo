@@ -38,6 +38,6 @@ public class Test extends TestCase{
 		StateSpace s = new StateSpace();
 		s.search();
 		System.out.println((System.currentTimeMillis() - curr)/1000.0);
-		s.frontier.get(0).state().getBoard().toString();
+		System.out.println(s.frontier.get(0).getParent().state().toString());
 	}
 }
