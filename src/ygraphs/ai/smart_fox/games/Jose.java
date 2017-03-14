@@ -21,9 +21,10 @@ public class Jose extends GamePlayer {
 	private GameClient gameClient;
 	private JFrame guiFrame = null;
 	private GameBoard board = null;
-	//private boolean gameStarted = false;
 	public String usrName = null;
-	public static String colour;
+
+	// private boolean gameStarted = false;
+	public static String colour = "white";
 	int turnCount;
 	public GameMove bestMove;
 	int limit;
@@ -46,8 +47,11 @@ public class Jose extends GamePlayer {
 		// server connection
 		connectToServer(name, password);
 		guiFrame.repaint();
-		//ID();
-		
+		// ID();
+
+	}
+	public static String oppositeColour(){
+		return colour.equals("white") ? "black" : "white";
 	}
 
 	/**
@@ -80,15 +84,15 @@ public class Jose extends GamePlayer {
 	public void ID() {
 		System.out.println("started ID.");
 		eval = new Evaluator();
-		int depth = 0;
+		int depth = 1;
 		colour = "white";
 		Node root = new Node(this.board.getState(), colour);
-		//while(timeLeft()){
-			root.hValue = alphaBeta(root, depth);
-			//depth++;
-		//}
-		LinkedList<Node> children = root.getChildren();
-		LinkedList<GameMove> bestMoves = new LinkedList<GameMove>();
+		// while(timeLeft()){
+		root.hValue = alphaBeta(root, depth);
+		// depth++;
+		// }
+		ArrayList<Node> children = root.getChildren();
+		ArrayList<GameMove> bestMoves = new ArrayList<GameMove>();
 		int max = Integer.MIN_VALUE;
 		for (Node s : children) {
 			if (max <= s.hValue) {
@@ -104,18 +108,17 @@ public class Jose extends GamePlayer {
 		int randomIndex = r.nextInt(bestMoves.size());
 		System.out.println(randomIndex);
 		bestMove = bestMoves.get(randomIndex);
-		System.out.println("****BEST MOVE*****"+bestMoves.size()+"\n" + bestMove.toString());
+		System.out.println("****BEST MOVE*****\nTotal moves found: " + bestMoves.size() + "\n" + bestMove.toString());
 		aiMove(bestMove);
 	}
 
 	/**
 	 * 
 	 * @param s
-	 * 			starting node being evaluated
+	 *            starting node being evaluated
 	 * @param limit
-	 *          depth to search at
-	 * @return 
-	 * 			best move from a-B pruning
+	 *            depth to search at
+	 * @return best move from a-B pruning
 	 */
 	public int alphaBeta(Node s, int limit) { // returns an action
 		return maxValue(s, Integer.MIN_VALUE, Integer.MAX_VALUE, limit);
@@ -218,6 +221,7 @@ public class Jose extends GamePlayer {
 			if (((String) msgDetails.get("player-black")).equals(this.userName())) {
 				System.out.println("Game State: " + msgDetails.get("player-black"));
 				Jose.colour = "black";
+				turnCount++;
 				ID();
 			} else {
 				Jose.colour = "white";
@@ -268,6 +272,7 @@ public class Jose extends GamePlayer {
 
 		@SuppressWarnings("unused")
 		Jose jose = new Jose("mack", "pass");
+		Jose jose2 = new Jose("mack", "pass");
 
 	}
 

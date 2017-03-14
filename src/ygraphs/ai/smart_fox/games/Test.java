@@ -34,7 +34,10 @@ public class Test extends TestCase{
 //
 //	}
 	public void test2 (){
-		Jose jose = new Jose("mack", "pass");
-		jose.ID();
+		long curr = System.currentTimeMillis();
+		StateSpace s = new StateSpace();
+		s.search();
+		System.out.println((System.currentTimeMillis() - curr)/1000.0);
+		s.frontier.get(0).state().getBoard().toString();
 	}
 }

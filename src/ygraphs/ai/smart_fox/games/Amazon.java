@@ -377,9 +377,9 @@ public class Amazon extends GamePlayer{
      * @param args
      */
 	public static void main(String[] args) { 
-		//Amazon game = new Amazon("yong.gao", "cosc322");
+		Amazon game = new Amazon("yong.gao", "cosc322");
 		@SuppressWarnings("unused")
-		Amazon game = new Amazon("player1", "pass");		
+		Amazon game2 = new Amazon("player1", "pass");		
     }
 	
 }//end of Amazon

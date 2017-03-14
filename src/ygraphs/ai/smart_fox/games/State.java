@@ -3,7 +3,9 @@ package ygraphs.ai.smart_fox.games;
 /**
  *
  *
- * @author macke Class containing board as string[][] support new locations, and
+ * @author macke 
+ * Class containing board as string[][] 
+ * supports new locations, and
  *         generating new boards from actions
  *
  */
@@ -33,8 +35,8 @@ public class State extends GameModel {
 		String tagB = null;
 		String tagW = null;
 
-		tagB = BoardGameModel.POS_MARKED_BLACK;
-		tagW = BoardGameModel.POS_MARKED_WHITE;
+		tagB = POS_MARKED_BLACK;
+		tagW = POS_MARKED_WHITE;
 
 		this.getBoard()[0][3] = tagW;
 		this.getBoard()[0][6] = tagW;
@@ -48,6 +50,13 @@ public class State extends GameModel {
 	}
 
 	// marks a new move on the current instance of state.board
+	/**
+	 * Marks a move on the board associated with this state
+	 * (changes this board)
+	 * @param move
+	 * @return
+	 * 		returns true is move is on the board
+	 */
 	public boolean positionMarked(GameMove move) {
 		boolean valid = true;
 		if ((((move.newRow >= board.length ? 1 : 0) | (move.newCol >= board.length ? 1 : 0)) != 0) || (move.newRow <= -1)
@@ -64,8 +73,17 @@ public class State extends GameModel {
 		return valid;
 	}
 
-	// receives a move and a state, then executes the move on the state and
-	// returns a new board
+	
+	/**
+	 * 
+	 * @param state
+	 * 		state being moved on
+	 * @param move
+	 * 		move being performed
+	 * @return
+	 * 		receives a move and a state, then executes the move on the state and 
+	 * returns a new board
+	 */
 	public State result(State state, GameMove move) {
 		State newState = new State(state.rows, state.columns);
 		for (int i = 0; i < state.board.length; i++) {
@@ -73,20 +91,36 @@ public class State extends GameModel {
 				newState.board[i][j] = state.board[i][j];
 			}
 		}
-		System.out.println(newState.positionMarked(move));
+		newState.positionMarked(move);
 		return newState;
 
 	}
 
-	// get method for board
+	/**
+	 * 
+	 * @param i
+	 * 		row coordinate
+	 * @param j
+	 * 		column coordinate
+	 * @param text
+	 * 	set a particular board location,
+	 */
 	public void setBoardLocation(int i, int j, String text) {
 		this.board[i][j] = text;
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 * 		returns the board associated with this state
+	 */
 	public String[][] getBoard() {
 		return this.board;
 	}
-
+/**
+ * returns a String representation of the board state 
+	 * associated with the current node
+ */
 	public String toString() {
 		String b = "";
 		for (int i = 0; i < board.length; i++) {

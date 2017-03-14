@@ -35,7 +35,7 @@ public class Evaluator {
 						//increment board for for our colour
 						ourScore++;
 					}
-					else if(!owned.equals("neutral")){
+					else if(owned == Jose.oppositeColour()){
 						opponentScore++;
 					}
 				} 	
