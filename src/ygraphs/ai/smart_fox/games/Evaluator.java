@@ -18,8 +18,9 @@ public class Evaluator {
 		// 4. else point is neutral.
 		State boardstate = n.state();
 		String[][] board = boardstate.getBoard();
-		int[][] black = n.getQueens(true);
-		int[][] white = n.getQueens(false);
+		String opposite = n.getType() == "black"? "white" : "black";
+		int[][] black = n.getQueens("black");
+		int[][] white = n.getQueens("white");
 		//String[][] map = board.clone();
 		
 		// Evaluate board for each queen
@@ -30,12 +31,12 @@ public class Evaluator {
 			int column = 0;
 			for (String j : i) {
 				if (j.equalsIgnoreCase("available")) {
-					String owned = dist(row, column, black, white);
-					if(owned == Jose.colour){
+					String ownership = dist(row, column, black, white);
+					if(ownership.equals(n.getType())){
 						//increment board for for our colour
 						ourScore++;
 					}
-					else if(owned == Jose.oppositeColour()){
+					else if(ownership.equals(opposite)){
 						opponentScore++;
 					}
 				} 	

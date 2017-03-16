@@ -54,7 +54,7 @@ public class GameMove {
 
 	}
 	public String toString(){
-		return "Current pos: ("+row+"," + col+")\nNew pos:("+newRow+"," + newCol+")\nArrow pos: ("+arrowRow+","+arrowCol+")\n";
+		return "Current pos: ("+row+"," + col+")\nNew pos:("+newRow+"," + newCol+")\nArrow pos: ("+arrowRow+","+arrowCol+")\nType: "+type;
 	}
 
 }

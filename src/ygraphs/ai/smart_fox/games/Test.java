@@ -34,10 +34,12 @@ public class Test extends TestCase{
 //
 //	}
 	public void test2 (){
+		Amazon p = new Amazon("mack", "pass");
 		long curr = System.currentTimeMillis();
-		StateSpace s = new StateSpace();
-		s.search();
+		
+	
 		System.out.println((System.currentTimeMillis() - curr)/1000.0);
-		System.out.println(s.frontier.get(0).getParent().state().toString());
+		
+		
 	}
 }

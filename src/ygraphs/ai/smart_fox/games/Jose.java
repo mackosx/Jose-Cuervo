@@ -25,7 +25,7 @@ public class Jose extends GamePlayer {
 
 	// private boolean gameStarted = false;
 	public static String colour = "white";
-	int turnCount;
+	static int turnCount;
 	public GameMove bestMove;
 	int limit;
 	public static long startTime;
@@ -88,90 +88,10 @@ public class Jose extends GamePlayer {
 		colour = "white";
 		Node root = new Node(this.board.getState(), colour);
 		// while(timeLeft()){
-		root.hValue = alphaBeta(root, depth);
-		// depth++;
-		// }
-		ArrayList<Node> children = root.getChildren();
-		ArrayList<GameMove> bestMoves = new ArrayList<GameMove>();
-		int max = Integer.MIN_VALUE;
-		for (Node s : children) {
-			if (max <= s.hValue) {
-				max = s.hValue;
-			}
-		}
-		for (Node s : children) {
-			if (max <= s.hValue) {
-				bestMoves.add(s.getMove());
-			}
-		}
-		Random r = new Random();
-		int randomIndex = r.nextInt(bestMoves.size());
-		System.out.println(randomIndex);
-		bestMove = bestMoves.get(randomIndex);
-		System.out.println("****BEST MOVE*****\nTotal moves found: " + bestMoves.size() + "\n" + bestMove.toString());
-		aiMove(bestMove);
+		
 	}
 
-	/**
-	 * 
-	 * @param s
-	 *            starting node being evaluated
-	 * @param limit
-	 *            depth to search at
-	 * @return best move from a-B pruning
-	 */
-	public int alphaBeta(Node s, int limit) { // returns an action
-		return maxValue(s, Integer.MIN_VALUE, Integer.MAX_VALUE, limit);
-	}
-
-	/**
-	 * 
-	 * @return max value of a node, based on alpha-beta
-	 */
-	int bestScore;
-
-	public int maxValue(Node s, int alpha, int beta, int limit) {
-		if (limit == 0) {
-			s.hValue = eval.minDistance(s);
-			return s.hValue;
-		}
-
-		int v = Integer.MIN_VALUE;
-		for (Node child : s.getChildren()) {
-			v = Math.max(v, minValue(child, alpha, beta, limit - 1));
-			alpha = Math.max(alpha, v);
-			if (beta <= alpha) {
-				break;
-			}
-		}
-		s.hValue = v;
-		return v;
-
-	}
-
-	/**
-	 * 
-	 * @param s
-	 * @param alpha
-	 * @param beta
-	 * @param limit
-	 * @return returns utility value for minimizing player
-	 */
-	public int minValue(Node s, int alpha, int beta, int limit) {
-		if (limit == 0)
-			return eval.minDistance(s);
-		int v = Integer.MAX_VALUE;
-		for (Node child : s.getChildren()) {
-			v = Math.min(v, maxValue(child, alpha, beta, limit - 1));
-			beta = Math.min(beta, v);
-			if (beta <= alpha) {
-				break;
-			}
-		}
-		s.hValue = v;
-		return v;
-
-	}
+	
 
 	// create interface
 	private void setupGUI() {

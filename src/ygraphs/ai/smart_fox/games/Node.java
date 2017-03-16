@@ -18,14 +18,14 @@ public class Node {
 	private GameMove move;
 	public int hValue;
 	private boolean expanded  = false;
-	ArrayList<Node> validMoves;
+	ArrayList<Node> validMoves = new ArrayList<Node>();
 
 	public Node(State state, String type) {
 		this.type = type;
 		setState(state);
 		validMoves = new ArrayList<Node>();
 		parent = null;
-		getQueens(false);
+		getQueens(type);
 	}
 
 	public State state() {
@@ -35,8 +35,15 @@ public class Node {
 	public void setState(State state) {
 		this.state = state;
 	}
-
-	public ArrayList<Node> getChildren() {
+	public String getType(){
+		return this.type;
+	}
+	
+	
+	public ArrayList<Node> getChildren(){
+		return validMoves;
+	}
+	public ArrayList<Node> generateChildren() {
 		if(!expanded){
 			getQueenMoves(this.state, this.type == "white" ? "black" : "white");
 			expanded = true;
@@ -45,14 +52,11 @@ public class Node {
 		
 	}
 
-	public int[][] getQueens(boolean opposite) {
+	public int[][] getQueens(String colour) {
 		// If opposite = true, will return location of opposite queens
 		int[][] queens = new int[4][2];
-		String colour = this.type;
 
-		if (opposite)
-			colour = colour.equalsIgnoreCase("white") ? "black" : "white";
-
+		
 		int counter = 0;
 		for (int i = 0; i < state.getBoard().length; i++) {
 			for (int j = 0; j < state.getBoard()[0].length; j++) {
@@ -76,14 +80,12 @@ public class Node {
 	 *            - player color, black or white
 	 * @return - all valid moves for the current board state
 	 */
-	// testing with all queen
-	public void getQueenMoves(State game, String type) {
+	public ArrayList<Node> getQueenMoves(State game, String type) {
 		
 
 		for (int queen = 0; queen < queenLocations.length; queen++) {
-			int currRow = getQueens(false)[queen][0];
-			int currCol = getQueens(false)[queen][1];
-			//System.out.println(currRow + ", " + currCol);
+			int currRow = getQueens(type)[queen][0];
+			int currCol = getQueens(type)[queen][1];
 
 			// check above
 			for (int i = currRow - 1; i >= 0; i--) {
@@ -128,7 +130,7 @@ public class Node {
 				if (!occupied(i, j, currRow, currCol, game)) {
 					// for each position, add all possible arrow shots to move
 					// list
-					getArrowMoves(new GameMove(currRow, currRow, i, j, type));
+					getArrowMoves(new GameMove(currRow, currCol, i, j, type));
 				} else {
 					break;
 				}
@@ -168,6 +170,7 @@ public class Node {
 				}
 			}
 		}
+		return validMoves;
 
 	}
 
@@ -184,7 +187,7 @@ public class Node {
 		for (int j = move.newCol - 1; j >= 0; j--) {
 			if (!occupied(move.newRow, j, move.row, move.col, state)) {
 				// change to use move
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, move.newRow, j, type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, move.newRow, j, move.type);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, move.type);
 				
@@ -204,7 +207,7 @@ public class Node {
 		// check right
 		for (int j = move.newCol + 1; j < state.getBoard().length; j++) {
 			if (!occupied(move.newRow, j, move.row, move.col, state)) {
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, move.newRow, j, type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, move.newRow, j, move.type);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, move.type);
 				
@@ -224,7 +227,7 @@ public class Node {
 		// check up
 		for (int i = move.newRow - 1; i >= 0; i--) {
 			if (!occupied(i, move.newCol, move.row, move.col, state)) {
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, move.newCol, type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, move.newCol, move.type);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, move.type);
 				
@@ -243,7 +246,7 @@ public class Node {
 		// check down
 		for (int i = move.newRow + 1; i < state.getBoard().length; i++) {
 			if (!occupied(i, move.newCol, move.row, move.col, state)) {
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, move.newCol, type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, move.newCol, move.type);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, move.type);
 				
@@ -264,7 +267,7 @@ public class Node {
 				&& j < state.getBoard().length; i++, j++) {
 			if (!occupied(i, j, move.row, move.col, state)) {
 				// for each position, add all possible arrow shots to move list
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j, type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j, move.type);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, move.type);
 				
@@ -304,7 +307,7 @@ public class Node {
 		for (int i = move.newRow + 1, j = move.newCol - 1; i < state.getBoard().length && j >= 0; i++, j--) {
 			if (!occupied(i, j, move.row, move.col, state)) {
 				// for each position, add all possible arrow shots to move list
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j, type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j, move.type);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, move.type);
 				

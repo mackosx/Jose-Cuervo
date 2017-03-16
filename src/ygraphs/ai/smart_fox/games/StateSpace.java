@@ -2,32 +2,76 @@ package ygraphs.ai.smart_fox.games;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.Random;
 
 public class StateSpace {
-	ArrayList<Node> frontier;
+	private Node root = null;
+	ArrayList<Node> frontier = new ArrayList<Node>();;
 	Evaluator eval;
-
-	public StateSpace() {
+	int depth = 0;
+	GameMove bestMove;
+	public StateSpace(Node r) {
+		root = r;
 		eval = new Evaluator();
 	}
 
+	public void makeMove(){
+		System.out.println(++Jose.turnCount);
+		
+	}
+	
+	public void startAlphaBeta(){
+		root.hValue = alphaBeta();
+		ArrayList<GameMove> bestMoves = new ArrayList<GameMove>();
+		int max = Integer.MIN_VALUE;
+		for (Node s : root.getChildren()) {
+			if (max <= s.hValue) {
+				max = s.hValue;
+				
+			}
+		}
+		for (Node s : root.getChildren()) {
+			if (max <= s.hValue) {
+				bestMoves.add(s.getMove());
+			}
+		}
+		System.out.println("Child nodes: " + root.getChildren().size());
+		if(root.getChildren().size() <= 0){
+			System.out.println("Game Over.");
+		}
+		Random r = new Random();
+		int randomIndex = r.nextInt(bestMoves.size());
+		System.out.println("Index selected: " + randomIndex);
+		bestMove = bestMoves.get(randomIndex);
+		System.out.println("****BEST MOVE*****\nTotal moves found: " + bestMoves.size() + "\n" + bestMove.toString());
+		System.out.println(root.state().result(root.state(), bestMove).toString());
+		System.out.println(eval.minDistance(new Node(root.state().result(root.state(), bestMove), "white")));
+		makeMove();
+	}
 	public void search() {
-		State s = new State(10, 10);
-		s.init(true);
-		Node root = new Node(s, "white");
-		frontier = new ArrayList<Node>(3100000);
-		frontier.addAll(root.getChildren());
-		int initialSize = root.validMoves.size();
-		System.out.println("Cleaning...");
-		clean();
-		System.out.println("From " + initialSize + " nodes to " + frontier.size());
-		System.out.println("Adding...");
+
+		System.out.println("Expanding nodes...");
 		add();
-		int current = frontier.size();
-		System.out.println("Node generated: " + current);
-		//System.out.println("Cleaning 2...");
-		//clean();
-		System.out.println("From " + current + " nodes to " + frontier.size());
+		System.out.println("Done.");
+		if (Jose.turnCount > 70) {
+			for(int i = 0; i < 4; i++){
+				add();
+				clean();
+			}
+			add();
+		} else if (Jose.turnCount >= 40){
+			for(int i = 0; i < 2; i++){
+				clean();
+				add();
+			}
+		} else if (Jose.turnCount >= 20){
+			clean();
+			add();
+		}
+		
+		
+		startAlphaBeta();
+		
 	}
 
 	/**
@@ -39,6 +83,7 @@ public class StateSpace {
 		for (Node s : frontier) {
 			s.hValue = eval.minDistance(s);
 			avg += s.hValue;
+
 		}
 		System.out.println("Done evaluations.");
 		if (frontier.size() != 0)
@@ -53,7 +98,6 @@ public class StateSpace {
 		}
 		System.out.println("Done removing.");
 
-
 		LinkedHashSet<Node> map = new LinkedHashSet<Node>(frontier);
 		map.removeAll(toBeRemoved);
 		frontier = new ArrayList<Node>(map);
@@ -62,14 +106,100 @@ public class StateSpace {
 	public void add() {
 		// initialize new frontier to old size
 		ArrayList<Node> nextLevel = new ArrayList<Node>(frontier.size());
-
-		for (int i = 0; i < frontier.size(); i++) {
-			nextLevel.addAll(frontier.get(i).getChildren());
-			//System.out.println(nextLevel.size());
+		
+		if (depth != 0) {
+			for (int i = 0; i < frontier.size(); i++) {
+				nextLevel.addAll(frontier.get(i).generateChildren());
+				// System.out.println(nextLevel.size());
+			}
+		} else {
+			nextLevel.addAll(root.getQueenMoves(root.state(), root.getType()));
 		}
 
 		frontier.clear();
 		frontier.addAll(nextLevel);
+		depth++;
+	}
+
+	public int getDepth() {
+		int d = 0;
+		Node s = root;
+		while (s != null) {
+			if (!s.getChildren().isEmpty()) {
+				s = s.getChildren().get(0);
+			} else
+				break;
+			d++;
+
+		}
+		depth = d;
+		return depth;
+
+	}
+	/**
+	 * 
+	 * @param s
+	 *            starting node being evaluated
+	 * @param limit
+	 *            depth to search at
+	 * @return best move from a-B pruning
+	 */
+	public int alphaBeta() { // returns an action
+		getDepth();
+		System.out.println("Calculated depth: " + depth);
+		return maxValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, depth);
+	}
+
+	/**
+	 * 
+	 * @return max value of a node, based on alpha-beta
+	 */
+	int bestScore;
+
+	public int maxValue(Node s, int alpha, int beta, int limit) {
+		if (limit == 0) {
+			s.hValue = eval.minDistance(s);
+			return s.hValue;
+		}
+
+		int v = Integer.MIN_VALUE;
+		for (Node child : s.getChildren()) {
+			v = Math.max(v, minValue(child, alpha, beta, limit - 1));
+			alpha = Math.max(alpha, v);
+			if (beta <= alpha) {
+				break;
+			}
+		}
+		s.hValue = v;
+		return v;
+
+	}
+
+	/**
+	 * 
+	 * @param s
+	 * @param alpha
+	 * @param beta
+	 * @param limit
+	 * @return returns utility value for minimizing player
+	 */
+	public int minValue(Node s, int alpha, int beta, int limit) {
+		if (limit == 0){
+			s.hValue = eval.minDistance(s);
+			return s.hValue;
+		}
+			
+		int v = Integer.MAX_VALUE;
+		for (Node child : s.getChildren()) {
+			v = Math.min(v, maxValue(child, alpha, beta, limit - 1));
+			beta = Math.min(beta, v);
+			if (beta <= alpha) {
+				break;
+			}
+		}
+		s.hValue = v;
+		return v;
+
 	}
 
 }

@@ -3,6 +3,8 @@ package ygraphs.ai.smart_fox.games;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
@@ -31,18 +33,27 @@ public class GameBoard extends JPanel {
 	int r = 0;
 	int c = 0;
 
-	Jose game = null;
+	Amazon game = null;
+	Jose aiGame = null;
 	private State gameModel = null;
 
 	boolean playerAMove;
 
-	public GameBoard(Jose game) {
+//	public GameBoard(Jose game) {
+//
+//
+//		this.aiGame = game;
+//		gameModel = new State(this.rows, this.cols);
+//		init(true);
+//	}
+	public GameBoard(Amazon game) {
 
-
+		addMouseListener(new  GameEventHandler());
 		this.game = game;
 		gameModel = new State(this.rows, this.cols);
 		init(true);
 	}
+
 
 	public State getState() {
 		return gameModel;
@@ -158,5 +169,68 @@ public class GameBoard extends JPanel {
 	public Dimension getPreferredSize() {
 		return new Dimension(750, 500);
 	}
+	public class GameEventHandler extends MouseAdapter {
+
+		int counter = 0;
+
+		int qrow = 0;
+		int qcol = 0;
+
+		int qfr = 0;
+		int qfc = 0;
+
+		int arow = 0;
+		int acol = 0;
+
+		public void mousePressed(MouseEvent e) {
+
+
+
+			int x = e.getX();
+			int y = e.getY();
+
+			if (((x - offset) < -5) || ((y - offset) < -5)) {
+				return;
+			}
+
+			int row = (y - offset) / cellDim;
+			int col = (x - offset) / cellDim;
+
+			if (counter == 0) {
+				qfr = row;
+				qfc = col;
+
+				//qfr = 9 - qfr;
+				counter++;
+			} else if (counter == 1) {
+				qrow = row;
+				qcol = col;
+
+				//qrow = 9 - qrow;
+				counter++;
+			} else if (counter == 2) {
+				arow = row;
+				acol = col;
+
+				//arow = 9 - arow;
+				counter++;
+			}
+
+			if (counter == 3) {
+				counter = 0;
+				System.out.println(qrow+" "+" "+qcol);
+				boolean validMove = markPosition(qrow, qcol, arow, acol, qfr, qfc, false); // update itself
+				Jose.turnCount++;
+
+
+				qrow = 0;
+				qcol = 0;
+				arow = 0;
+				acol = 0;
+
+			}
+		}
+	}// end of GameEventHandler
+
 
 }// end

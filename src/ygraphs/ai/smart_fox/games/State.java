@@ -20,7 +20,7 @@ public class State extends GameModel {
 	int rows, columns;
 
 	// constructor for new state with rows and columns of the game board
-	State(int rows, int columns) {
+	public State(int rows, int columns) {
 		this.rows = rows;
 		this.columns = columns;
 		board = new String[rows][columns];
@@ -31,6 +31,9 @@ public class State extends GameModel {
 		}
 	}
 
+	public State(String[][] b){
+		this.board = b;
+	}
 	public void init(boolean isPlayerA) {
 		String tagB = null;
 		String tagW = null;
