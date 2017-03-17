@@ -1,4 +1,4 @@
-package ygraphs.ai.smart_fox.games;
+package AI;
 
 import java.awt.BorderLayout;
 import java.awt.Container;

@@ -1,12 +1,12 @@
-package ygraphs.ai.smart_fox.games;
+package AI;
+
+import ygraphs.ai.smart_fox.games.GameModel;
 
 /**
  *
  *
- * @author macke 
- * Class containing board as string[][] 
- * supports new locations, and
- *         generating new boards from actions
+ * @author macke Class containing board as string[][] supports new locations,
+ *         and generating new boards from actions
  *
  */
 
@@ -31,9 +31,10 @@ public class State extends GameModel {
 		}
 	}
 
-	public State(String[][] b){
+	public State(String[][] b) {
 		this.board = b;
 	}
+
 	public void init(boolean isPlayerA) {
 		String tagB = null;
 		String tagW = null;
@@ -54,40 +55,39 @@ public class State extends GameModel {
 
 	// marks a new move on the current instance of state.board
 	/**
-	 * Marks a move on the board associated with this state
-	 * (changes this board)
+	 * Marks a move on the board associated with this state (changes this board)
+	 * 
 	 * @param move
-	 * @return
-	 * 		returns true is move is on the board
+	 * @return returns true is move is on the board
 	 */
 	public boolean positionMarked(GameMove move) {
 		boolean valid = true;
-		if ((((move.newRow >= board.length ? 1 : 0) | (move.newCol >= board.length ? 1 : 0)) != 0) || (move.newRow <= -1)
-				|| (move.newCol <= -1)) {
+		if ((((move.newRow >= board.length ? 1 : 0) | (move.newCol >= board.length ? 1 : 0)) != 0)
+				|| (move.newRow <= -1) || (move.newCol <= -1)) {
 			valid = false;
 		} else if (!board[move.newRow][move.newCol].equalsIgnoreCase("available")) {
 			valid = false;
 		}
-
-		board[move.newRow][move.newCol] = board[move.row][move.col];
-		board[move.row][move.col] = "available";
-		board[move.arrowRow][move.arrowCol] = "arrow";
+		if (move.newRow != -1 && move.newCol != -1)
+			board[move.newRow][move.newCol] = board[move.row][move.col];
+		if (move.row != -1 && move.row != -1)
+			board[move.row][move.col] = "available";
+		if (move.arrowRow != -1 && move.arrowCol != -1)
+			board[move.arrowRow][move.arrowCol] = "arrow";
 
 		return valid;
 	}
 
-	
 	/**
 	 * 
 	 * @param state
-	 * 		state being moved on
+	 *            state being moved on
 	 * @param move
-	 * 		move being performed
-	 * @return
-	 * 		receives a move and a state, then executes the move on the state and 
-	 * returns a new board
+	 *            move being performed
+	 * @return receives a move and a state, then executes the move on the state
+	 *         and returns a new board
 	 */
-	public State result(State state, GameMove move) {
+	public static State result(State state, GameMove move) {
 		State newState = new State(state.rows, state.columns);
 		for (int i = 0; i < state.board.length; i++) {
 			for (int j = 0; j < state.board[0].length; j++) {
@@ -102,46 +102,73 @@ public class State extends GameModel {
 	/**
 	 * 
 	 * @param i
-	 * 		row coordinate
+	 *            row coordinate
 	 * @param j
-	 * 		column coordinate
+	 *            column coordinate
 	 * @param text
-	 * 	set a particular board location,
+	 *            set a particular board location,
 	 */
 	public void setBoardLocation(int i, int j, String text) {
 		this.board[i][j] = text;
 	}
-	
+
 	/**
 	 * 
-	 * @return
-	 * 		returns the board associated with this state
+	 * @return returns the board associated with this state
 	 */
 	public String[][] getBoard() {
 		return this.board;
 	}
-/**
- * returns a String representation of the board state 
-	 * associated with the current node
- */
+
+	/**
+	 * returns a String representation of the board state associated with the
+	 * current node
+	 */
 	public String toString() {
 		String b = "";
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[0].length; j++) {
-				switch(this.board[i][j]){
+				switch (this.board[i][j]) {
+				case "white":
+					b += "|W";
+					break;
+				case "black":
+					b += "|B";
+					break;
+				case "arrow":
+					b += "|+";
+					break;
+				case "available":
+					b += "| ";
+					break;
+				}
+			}
+			b += "\n";
+		}
+		return b;
+	}
+
+	public String toString(int row, int col) {
+		String b = "";
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[0].length; j++) {
+				if (i == row && j == col) {
+					b+= "|x";
+				} else
+					switch (this.board[i][j]) {
 					case "white":
-						b+="|W";
+						b += "|W";
 						break;
 					case "black":
-						b+="|B";
+						b += "|B";
 						break;
 					case "arrow":
-						b+="|+";
+						b += "|+";
 						break;
 					case "available":
-						b+="| ";
+						b += "| ";
 						break;
-				}
+					}
 			}
 			b += "\n";
 		}

@@ -1,4 +1,4 @@
-package ygraphs.ai.smart_fox.games;
+package AI;
 
 public class Timer implements Runnable{
 

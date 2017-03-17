@@ -1,4 +1,4 @@
-package ygraphs.ai.smart_fox.games;
+package AI;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -12,6 +12,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
+import ygraphs.ai.smart_fox.games.Amazon;
+import ygraphs.ai.smart_fox.games.GamePlayer;
 
 
 /**
@@ -33,28 +36,29 @@ public class GameBoard extends JPanel {
 	int r = 0;
 	int c = 0;
 
-	Amazon game = null;
-	Jose aiGame = null;
+	GamePlayer game = null;
 	private State gameModel = null;
 
 	boolean playerAMove;
 
-//	public GameBoard(Jose game) {
-//
-//
-//		this.aiGame = game;
-//		gameModel = new State(this.rows, this.cols);
-//		init(true);
-//	}
-	public GameBoard(Amazon game) {
-
+	
+	public GameBoard(AI.Amazon amazon) {
 		addMouseListener(new  GameEventHandler());
-		this.game = game;
+		this.game = amazon;
+		gameModel = new State(this.rows, this.cols);
+		init(true);
+	}
+	public GameBoard(Jose amazon) {
+
+
+		this.game = amazon;
 		gameModel = new State(this.rows, this.cols);
 		init(true);
 	}
 
 
+
+	
 	public State getState() {
 		return gameModel;
 	}
@@ -97,7 +101,7 @@ public class GameBoard extends JPanel {
 
 		System.out.println(qrow + ", " + qcol + ", " + arow + ", " + acol + ", " + qfr + ", " + qfc);
 
-		boolean valid = gameModel.positionMarked(new GameMove(qfr, qfc, qrow, qcol, arow, acol, null));
+		boolean valid = gameModel.positionMarked(new GameMove(qfr, qfc, qrow, qcol, arow, acol));
 		repaint();
 		return valid;
 	}

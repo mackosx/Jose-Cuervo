@@ -1,4 +1,4 @@
-package ygraphs.ai.smart_fox.games;
+package AI;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -18,8 +18,12 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
+import AI.GameBoard;
 import ygraphs.ai.smart_fox.GameMessage;
+//import ygraphs.ai.smart_fox.games.Amazon;
+import ygraphs.ai.smart_fox.games.AmazonsGameMessage;
+import ygraphs.ai.smart_fox.games.GameClient;
+import ygraphs.ai.smart_fox.games.GamePlayer;
 
 /**
  * For testing and demo purposes only. An GUI Amazon client for human players
@@ -41,15 +45,15 @@ public class Amazon extends GamePlayer {
 	 * @param passwd
 	 */
 	public Amazon(String name, String passwd) {
+		connectToServer(name, passwd);
 
 		this.usrName = name;
-		setupGUI();
+		setupGUI(gameClient);
 		guiFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
 			}
 		});
-		connectToServer(name, passwd);
 	}
 
 	private void connectToServer(String name, String passwd) {
@@ -149,10 +153,11 @@ public class Amazon extends GamePlayer {
 	}
 
 	// set up the game board
-	private void setupGUI() {
+	private void setupGUI(GameClient client) {
 		guiFrame = new JFrame();
 
 		guiFrame.setSize(800, 600);
+		
 		guiFrame.setTitle("Game of the Amazons (COSC 322, UBCO)");
 
 		guiFrame.setLocation(200, 200);
@@ -181,6 +186,11 @@ public class Amazon extends GamePlayer {
 				StateSpace s = new StateSpace(start);
 				s.search();
 				board.getState().positionMarked(s.bestMove);
+				int[] qf = {s.bestMove.row, s.bestMove.col};
+				int[] qn = {s.bestMove.newRow, s.bestMove.newCol};
+				int[] a = {s.bestMove.arrowRow, s.bestMove.arrowCol};
+				client.sendMoveMessage(qf, qn, a);
+
 				guiFrame.repaint();
 
 			}
@@ -191,7 +201,8 @@ public class Amazon extends GamePlayer {
 	}
 
 	private GameBoard createGameBoard() {
-		return new GameBoard(this);
+		GameBoard g = new GameBoard(this);
+		return g;
 	}
 
 	public boolean handleMessage(String msg) {
@@ -213,6 +224,7 @@ public class Amazon extends GamePlayer {
 	 */
 	public static void main(String[] args) {
 		Amazon game = new Amazon("yong.gao", "cosc322");
+		//Amazon game2 = new Amazon("play2", "cosc");
 
 	}
 

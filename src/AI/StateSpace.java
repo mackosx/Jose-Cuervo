@@ -1,4 +1,4 @@
-package ygraphs.ai.smart_fox.games;
+package AI;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -7,12 +7,10 @@ import java.util.Random;
 public class StateSpace {
 	private Node root = null;
 	ArrayList<Node> frontier = new ArrayList<Node>();;
-	Evaluator eval;
 	int depth = 0;
 	GameMove bestMove;
 	public StateSpace(Node r) {
 		root = r;
-		eval = new Evaluator();
 	}
 
 	public void makeMove(){
@@ -21,6 +19,8 @@ public class StateSpace {
 	}
 	
 	public void startAlphaBeta(){
+		Evaluator eval = new Evaluator();
+		System.out.println("AlphaBeta depth: " + depth);
 		root.hValue = alphaBeta();
 		ArrayList<GameMove> bestMoves = new ArrayList<GameMove>();
 		int max = Integer.MIN_VALUE;
@@ -38,18 +38,20 @@ public class StateSpace {
 		System.out.println("Child nodes: " + root.getChildren().size());
 		if(root.getChildren().size() <= 0){
 			System.out.println("Game Over.");
+			System.exit(1);
 		}
 		Random r = new Random();
 		int randomIndex = r.nextInt(bestMoves.size());
 		System.out.println("Index selected: " + randomIndex);
 		bestMove = bestMoves.get(randomIndex);
 		System.out.println("****BEST MOVE*****\nTotal moves found: " + bestMoves.size() + "\n" + bestMove.toString());
-		System.out.println(root.state().result(root.state(), bestMove).toString());
-		System.out.println(eval.minDistance(new Node(root.state().result(root.state(), bestMove), "white")));
+		System.out.println(State.result(root.state(), bestMove).toString());
+		System.out.println(eval.newMinDist(new Node(State.result(root.state(), bestMove), "white")));
 		makeMove();
 	}
 	public void search() {
-
+		//right now is static level generation
+		// could convert to iterative deepening
 		System.out.println("Expanding nodes...");
 		add();
 		System.out.println("Done.");
@@ -67,6 +69,7 @@ public class StateSpace {
 		} else if (Jose.turnCount >= 20){
 			clean();
 			add();
+
 		}
 		
 		
@@ -78,10 +81,11 @@ public class StateSpace {
 	 * removes nodes whose value is less than the average
 	 */
 	public void clean() {
+		Evaluator eval = new Evaluator();
 		int avg = 0;
 		System.out.println("Evaluation in progress...");
 		for (Node s : frontier) {
-			s.hValue = eval.minDistance(s);
+			s.hValue = eval.newMinDist(s);
 			avg += s.hValue;
 
 		}
@@ -145,7 +149,7 @@ public class StateSpace {
 	 * @return best move from a-B pruning
 	 */
 	public int alphaBeta() { // returns an action
-		getDepth();
+		//getDepth();
 		System.out.println("Calculated depth: " + depth);
 		return maxValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, depth);
 	}
@@ -157,8 +161,9 @@ public class StateSpace {
 	int bestScore;
 
 	public int maxValue(Node s, int alpha, int beta, int limit) {
+		Evaluator eval = new Evaluator();
 		if (limit == 0) {
-			s.hValue = eval.minDistance(s);
+			s.hValue = eval.newMinDist(s);
 			return s.hValue;
 		}
 
@@ -184,8 +189,9 @@ public class StateSpace {
 	 * @return returns utility value for minimizing player
 	 */
 	public int minValue(Node s, int alpha, int beta, int limit) {
+		Evaluator eval = new Evaluator();
 		if (limit == 0){
-			s.hValue = eval.minDistance(s);
+			s.hValue = eval.newMinDist(s);
 			return s.hValue;
 		}
 			

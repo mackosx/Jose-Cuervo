@@ -1,4 +1,4 @@
-package ygraphs.ai.smart_fox.games;
+package AI;
 
 import java.util.LinkedList;
 
@@ -33,13 +33,26 @@ public class Test extends TestCase{
 //
 //
 //	}
-	public void test2 (){
-		Amazon p = new Amazon("mack", "pass");
+	public void test1(){
 		long curr = System.currentTimeMillis();
+		State st = new State(10, 10);
+		st.init(true);
+		Node n = new Node(st, "white");
+		Evaluator e = new Evaluator();
 		
-	
-		System.out.println((System.currentTimeMillis() - curr)/1000.0);
-		
-		
+		System.out.println(n.state().toString());
+		System.out.println(e.newMinDist(n));
+		System.out.println(e.str);
+		System.out.println("Time: " + (System.currentTimeMillis() - curr) + "ms");
 	}
+//	public void test2 (){
+//		Amazon p = new Amazon("mack", "pass");
+//		long curr = System.currentTimeMillis();
+//		
+//	
+//		System.out.println((System.currentTimeMillis() - curr)/1000.0);
+//		
+//		
+//	}
+	
 }

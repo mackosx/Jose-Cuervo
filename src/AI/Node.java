@@ -1,7 +1,6 @@
-package ygraphs.ai.smart_fox.games;
+package AI;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * Node Class for State Space Search -nodes have accessible states through
@@ -92,7 +91,7 @@ public class Node {
 				if (!occupied(i, currCol, currRow, currCol, game)) {
 					// for each position, add all possible arrow shots to move
 					// list
-					getArrowMoves(new GameMove(currRow, currCol, i, currCol, type));
+					getArrowMoves(new GameMove(currRow, currCol, i, currCol), type);
 				} else {
 					break;
 				} 
@@ -101,7 +100,7 @@ public class Node {
 			// check below
 			for (int i = currRow + 1; i < game.getBoard().length; i++) {
 				if (!occupied(i, currCol, currRow, currCol, game)) {
-					getArrowMoves(new GameMove(currRow, currCol, i, currCol, type));
+					getArrowMoves(new GameMove(currRow, currCol, i, currCol), type);
 				} else {
 					break;
 				}
@@ -110,7 +109,7 @@ public class Node {
 			// check left
 			for (int j = currCol - 1; j >= 0; j--) {
 				if (!occupied(currRow, j, currRow, currCol, game)) {
-					getArrowMoves(new GameMove(currRow, currCol, currRow, j, type));
+					getArrowMoves(new GameMove(currRow, currCol, currRow, j), type);
 				} else {
 					break;
 				}
@@ -119,7 +118,7 @@ public class Node {
 			// check right
 			for (int j = currCol + 1; j < game.getBoard().length; j++) {
 				if (!occupied(currRow, j, currRow, currCol, game)) {
-					getArrowMoves(new GameMove(currRow, currCol, currRow, j, type));
+					getArrowMoves(new GameMove(currRow, currCol, currRow, j), type);
 				} else {
 					break;
 				}
@@ -130,7 +129,7 @@ public class Node {
 				if (!occupied(i, j, currRow, currCol, game)) {
 					// for each position, add all possible arrow shots to move
 					// list
-					getArrowMoves(new GameMove(currRow, currCol, i, j, type));
+					getArrowMoves(new GameMove(currRow, currCol, i, j), type);
 				} else {
 					break;
 				}
@@ -141,7 +140,7 @@ public class Node {
 				if (!occupied(i, j, currRow, currCol, game)) {
 					// for each position, add all possible arrow shots to move
 					// list
-					getArrowMoves(new GameMove(currRow, currCol, i, j, type));
+					getArrowMoves(new GameMove(currRow, currCol, i, j), type);
 				} else {
 					break;
 				}
@@ -153,7 +152,7 @@ public class Node {
 				if (!occupied(i, j, currRow, currCol, game)) {
 					// for each position, add all possible arrow shots to move
 					// list
-					getArrowMoves(new GameMove(currRow, currCol, i, j, type));
+					getArrowMoves(new GameMove(currRow, currCol, i, j), type);
 				} else {
 					break;
 				}
@@ -164,7 +163,7 @@ public class Node {
 				if (!occupied(i, j, currRow, currCol, game)) {
 					// for each position, add all possible arrow shots to move
 					// list
-					getArrowMoves(new GameMove(currRow, currCol, i, j, type));
+					getArrowMoves(new GameMove(currRow, currCol, i, j), type);
 				} else {
 					break;
 				}
@@ -182,14 +181,14 @@ public class Node {
 	 */
 	static int count = 0;
 
-	public void getArrowMoves(GameMove move) {
+	public void getArrowMoves(GameMove move, String type) {
 		// check left
 		for (int j = move.newCol - 1; j >= 0; j--) {
 			if (!occupied(move.newRow, j, move.row, move.col, state)) {
 				// change to use move
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, move.newRow, j, move.type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, move.newRow, j);
 				State temp = state.result(state, tempMove);
-				Node child = new Node(temp, move.type);
+				Node child = new Node(temp, type);
 				
 				child.parent = this;
 				child.move = tempMove;
@@ -207,9 +206,9 @@ public class Node {
 		// check right
 		for (int j = move.newCol + 1; j < state.getBoard().length; j++) {
 			if (!occupied(move.newRow, j, move.row, move.col, state)) {
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, move.newRow, j, move.type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, move.newRow, j);
 				State temp = state.result(state, tempMove);
-				Node child = new Node(temp, move.type);
+				Node child = new Node(temp, type);
 				
 				child.parent = this;
 				child.move = tempMove;
@@ -227,9 +226,9 @@ public class Node {
 		// check up
 		for (int i = move.newRow - 1; i >= 0; i--) {
 			if (!occupied(i, move.newCol, move.row, move.col, state)) {
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, move.newCol, move.type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, move.newCol);
 				State temp = state.result(state, tempMove);
-				Node child = new Node(temp, move.type);
+				Node child = new Node(temp, type);
 				
 				child.move = tempMove;
 				child.parent = this;
@@ -246,9 +245,9 @@ public class Node {
 		// check down
 		for (int i = move.newRow + 1; i < state.getBoard().length; i++) {
 			if (!occupied(i, move.newCol, move.row, move.col, state)) {
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, move.newCol, move.type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, move.newCol);
 				State temp = state.result(state, tempMove);
-				Node child = new Node(temp, move.type);
+				Node child = new Node(temp, type);
 				
 				child.parent = this;
 				child.move = tempMove;
@@ -267,9 +266,9 @@ public class Node {
 				&& j < state.getBoard().length; i++, j++) {
 			if (!occupied(i, j, move.row, move.col, state)) {
 				// for each position, add all possible arrow shots to move list
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j, move.type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j);
 				State temp = state.result(state, tempMove);
-				Node child = new Node(temp, move.type);
+				Node child = new Node(temp, type);
 				
 				child.parent = this;
 				child.move = tempMove;
@@ -287,9 +286,9 @@ public class Node {
 		for (int i = move.newRow - 1, j = move.newCol + 1; i >= 0 && j < state.getBoard().length; i--, j++) {
 			if (!occupied(i, j, move.row, move.col, state)) {
 				// for each position, add all possible arrow shots to move list
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j, type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j);
 				State temp = state.result(state, tempMove);
-				Node child = new Node(temp, move.type);
+				Node child = new Node(temp, type);
 				
 				child.parent = this;
 				child.move = tempMove;
@@ -307,9 +306,9 @@ public class Node {
 		for (int i = move.newRow + 1, j = move.newCol - 1; i < state.getBoard().length && j >= 0; i++, j--) {
 			if (!occupied(i, j, move.row, move.col, state)) {
 				// for each position, add all possible arrow shots to move list
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j, move.type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j);
 				State temp = state.result(state, tempMove);
-				Node child = new Node(temp, move.type);
+				Node child = new Node(temp, type);
 				
 				child.parent = this;
 				child.move = tempMove;
@@ -327,9 +326,9 @@ public class Node {
 		for (int i = move.newRow - 1, j = move.newCol - 1; i >= 0 && j >= 0; i--, j--) {
 			if (!occupied(i, j, move.row, move.col, state)) {
 				// for each position, add all possible arrow shots to move list
-				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j, type);
+				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j);
 				State temp = state.result(state, tempMove);
-				Node child = new Node(temp, move.type);
+				Node child = new Node(temp, type);
 				
 				child.parent = this;
 				child.move = tempMove;
