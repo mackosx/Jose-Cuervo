@@ -25,7 +25,7 @@ public class Jose extends GamePlayer {
 
 	// private boolean gameStarted = false;
 	public static String colour = "white";
-	static int turnCount;
+	static int turnCount = 0;
 	public GameMove bestMove;
 	int limit;
 	public static long startTime;
@@ -81,15 +81,7 @@ public class Jose extends GamePlayer {
 	/**
 	 * Iterative Deepening Search
 	 */
-	public void ID() {
-		System.out.println("started ID.");
-		eval = new Evaluator();
-		int depth = 1;
-		colour = "white";
-		Node root = new Node(this.board.getState(), colour);
-		// while(timeLeft()){
-		
-	}
+	
 
 	
 
@@ -136,22 +128,19 @@ public class Jose extends GamePlayer {
 	 */
 	@Override
 	public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
-		System.out.println("handle game message called: " + messageType);
+		System.out.println("Handle Game Message Called: " + msgDetails.toString());
 		if (messageType.equals(GameMessage.GAME_ACTION_START)) {
+
 			if (((String) msgDetails.get("player-black")).equals(this.userName())) {
 				System.out.println("Game State: " + msgDetails.get("player-black"));
-				Jose.colour = "black";
-				turnCount++;
-				ID();
-			} else {
-				Jose.colour = "white";
+				colour="black";
+
+			}else{
+				colour="white";
 			}
 
 		} else if (messageType.equals(GameMessage.GAME_ACTION_MOVE)) {
-			turnCount++;
-			System.out.println(turnCount);
 			handleOpponentMove(msgDetails);
-			ID();
 		}
 		return true;
 	}
@@ -192,7 +181,7 @@ public class Jose extends GamePlayer {
 
 		@SuppressWarnings("unused")
 		Jose jose = new Jose("mack", "pass");
-		Jose jose2 = new Jose("mack", "pass");
+		Jose jose2 = new Jose("mack2", "pass");
 
 	}
 

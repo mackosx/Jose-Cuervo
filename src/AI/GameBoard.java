@@ -70,15 +70,17 @@ public class GameBoard extends JPanel {
 		tagB = State.POS_MARKED_BLACK;
 		tagW = State.POS_MARKED_WHITE;
 
-		gameModel.setBoardLocation(0, 3, tagW);
-		gameModel.setBoardLocation(0, 6, tagW);
-		gameModel.setBoardLocation(2, 0, tagW);
-		gameModel.setBoardLocation(2, 9, tagW);
+		gameModel.setBoardLocation(0, 3, tagB);
+		gameModel.setBoardLocation(0, 6, tagB);
+		gameModel.setBoardLocation(2, 0, tagB);
+		gameModel.setBoardLocation(2, 9, tagB);
 
-		gameModel.setBoardLocation(7, 0, tagB);
-		gameModel.setBoardLocation(7, 9, tagB);
-		gameModel.setBoardLocation(9, 3, tagB);
-		gameModel.setBoardLocation(9, 6, tagB);
+		gameModel.setBoardLocation(7, 0, tagW);
+		gameModel.setBoardLocation(7, 9, tagW);
+		gameModel.setBoardLocation(9, 3, tagW);
+		gameModel.setBoardLocation(9, 6, tagW);
+		
+	
 	}
 
 	/**

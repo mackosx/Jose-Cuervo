@@ -204,6 +204,20 @@ public class Evaluator {
 			q = tempQ;
 		}
 	}
+	
+	public int numMovesHeuristic(Node n){
+		boolean[][] b = new boolean[10][10];
+		int numMoves = 0;
+		int[][] queens = n.getQueens(n.getType());
+		for(int count = 0; count < queens.length; count++){
+			int currRow = queens[count][0];
+			int currCol = queens[count][1];
+			numMoves+=getQueenMoves(currRow, currCol, n.state(), b).size();
+		}
+		
+		return numMoves;
+		
+	}
 
 	public LinkedList<GameMove> getQueenMoves(int currRow, int currCol, State boardstate, boolean[][] checked) {
 		// check above

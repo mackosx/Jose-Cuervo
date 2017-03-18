@@ -37,6 +37,7 @@ public class Amazon extends GamePlayer {
 	private GameBoard board = null;
 	private boolean gameStarted = false;
 	public String usrName = null;
+	public String colour = "white";
 
 	/**
 	 * Constructor
@@ -55,6 +56,21 @@ public class Amazon extends GamePlayer {
 			}
 		});
 	}
+	public void makeMove(){
+		System.out.println("initializing state.");
+		Node n = new Node(board.getState(), colour);
+		StateSpace s = new StateSpace(n);
+		System.out.println("Starting search.");
+		s.search();
+		board.getState().positionMarked(s.bestMove);
+		//int[][] properLocations = convertCoords(s.bestMove, false);
+		int[] qf = {s.bestMove.row, s.bestMove.col};
+		int[] qn = {s.bestMove.newRow, s.bestMove.newCol};
+		int[] a = {s.bestMove.arrowRow, s.bestMove.arrowCol};
+		this.gameClient.sendMoveMessage(qf, qn, a);
+
+		guiFrame.repaint();
+	}
 
 	private void connectToServer(String name, String passwd) {
 		// create a client and use "this" class (a GamePlayer) as the delegate.
@@ -72,7 +88,9 @@ public class Amazon extends GamePlayer {
 		// once logged in, the gameClient will have the names of available game
 		// rooms
 		ArrayList<String> rooms = gameClient.getRoomList();
-		this.gameClient.joinRoom(rooms.get(6));
+		System.out.println(rooms.toString());
+		this.gameClient.joinRoom(rooms.get(5));
+		//6 and 7 do NOT call handle game message OYAMA LAKE AND WOOD LAKE
 		System.out.println("Player successfully joined room.");
 	}
 
@@ -89,15 +107,21 @@ public class Amazon extends GamePlayer {
 	 *            - A HashMap info and data about a game action
 	 */
 	public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
-		System.out.println("handle msg amazon: " + messageType);
+		System.out.println("Handle Game Message Called: " + messageType.toString());
 		if (messageType.equals(GameMessage.GAME_ACTION_START)) {
 
 			if (((String) msgDetails.get("player-black")).equals(this.userName())) {
 				System.out.println("Game State: " + msgDetails.get("player-black"));
+				this.colour = "black";
+				makeMove();
+			}
+			else{
+				this.colour = "white";
 			}
 
 		} else if (messageType.equals(GameMessage.GAME_ACTION_MOVE)) {
 			handleOpponentMove(msgDetails);
+			makeMove();
 		}
 		return true;
 	}
@@ -181,11 +205,13 @@ public class Amazon extends GamePlayer {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				Node start = new Node(board.getState(), "white");
-				StateSpace s = new StateSpace(start);
+				System.out.println("initializing state.");
+				Node n = new Node(board.getState(), colour);
+				StateSpace s = new StateSpace(n);
+				System.out.println("Starting search.");
 				s.search();
 				board.getState().positionMarked(s.bestMove);
+				//int[][] properLocations = convertCoords(s.bestMove, false);
 				int[] qf = {s.bestMove.row, s.bestMove.col};
 				int[] qn = {s.bestMove.newRow, s.bestMove.newCol};
 				int[] a = {s.bestMove.arrowRow, s.bestMove.arrowCol};
@@ -193,6 +219,16 @@ public class Amazon extends GamePlayer {
 
 				guiFrame.repaint();
 
+			}
+
+			private int[][] convertCoords(GameMove bestMove, boolean opponent) {
+				if(opponent){
+					//TODO: implement conversion from 1-10 Cartesian to our 0-9 array form
+				}
+				else{
+					//TODO: implement conversion form 0-9 array to 1-10 Cartesian
+				}
+				return null;
 			}
 
 		});
@@ -224,7 +260,7 @@ public class Amazon extends GamePlayer {
 	 */
 	public static void main(String[] args) {
 		Amazon game = new Amazon("yong.gao", "cosc322");
-		//Amazon game2 = new Amazon("play2", "cosc");
+		Amazon game2 = new Amazon("play2", "cosc");
 
 	}
 

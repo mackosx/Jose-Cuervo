@@ -12,49 +12,38 @@ public class StateSpace {
 	public StateSpace(Node r) {
 		root = r;
 	}
-
-	public void makeMove(){
-		System.out.println(++Jose.turnCount);
-		
-	}
 	
 	public void startAlphaBeta(){
-		Evaluator eval = new Evaluator();
-		System.out.println("AlphaBeta depth: " + depth);
+		getDepth();
 		root.hValue = alphaBeta();
-		ArrayList<GameMove> bestMoves = new ArrayList<GameMove>();
+		ArrayList<Node> bestMoves = new ArrayList<Node>();
 		int max = Integer.MIN_VALUE;
 		for (Node s : root.getChildren()) {
-			if (max <= s.hValue) {
+			if (s.hValue >= max) {
 				max = s.hValue;
 				
 			}
 		}
 		for (Node s : root.getChildren()) {
-			if (max <= s.hValue) {
-				bestMoves.add(s.getMove());
+			if (s.hValue >= max) {
+				bestMoves.add(s);
 			}
 		}
-		System.out.println("Child nodes: " + root.getChildren().size());
 		if(root.getChildren().size() <= 0){
 			System.out.println("Game Over.");
 			System.exit(1);
 		}
 		Random r = new Random();
 		int randomIndex = r.nextInt(bestMoves.size());
-		System.out.println("Index selected: " + randomIndex);
-		bestMove = bestMoves.get(randomIndex);
-		System.out.println("****BEST MOVE*****\nTotal moves found: " + bestMoves.size() + "\n" + bestMove.toString());
-		System.out.println(State.result(root.state(), bestMove).toString());
-		System.out.println(eval.newMinDist(new Node(State.result(root.state(), bestMove), "white")));
-		makeMove();
+		bestMove = bestMoves.get(randomIndex).getMove();
+		State st = new State(root.state().getBoard());
+		System.out.println(st.result(root.state(), bestMove).toString());
+		Jose.turnCount++;
 	}
 	public void search() {
 		//right now is static level generation
-		// could convert to iterative deepening
-		System.out.println("Expanding nodes...");
+		// TODO: could convert to iterative deepening
 		add();
-		System.out.println("Done.");
 		if (Jose.turnCount > 70) {
 			for(int i = 0; i < 4; i++){
 				add();
@@ -72,20 +61,22 @@ public class StateSpace {
 
 		}
 		
-		
+		System.out.println("Starting Alpha Beta Pruning/Minimax.");
 		startAlphaBeta();
+		System.out.println("Done pruning.");
 		
 	}
 
 	/**
-	 * removes nodes whose value is less than the average
+	 * removes nodes whose value is less than average
 	 */
 	public void clean() {
 		Evaluator eval = new Evaluator();
 		int avg = 0;
 		System.out.println("Evaluation in progress...");
 		for (Node s : frontier) {
-			s.hValue = eval.newMinDist(s);
+			// TODO: stop repeated evaluations at level 0
+			//s.hValue = eval.newMinDist(s);
 			avg += s.hValue;
 
 		}
@@ -93,8 +84,8 @@ public class StateSpace {
 		if (frontier.size() != 0)
 			avg /= frontier.size();
 		System.out.println(avg);
-		System.out.println("Preparing for removal...");
 		ArrayList<Node> toBeRemoved = new ArrayList<Node>();
+		System.out.println("Removing from frontier...");
 		for (Node s : frontier) {
 			if (s.hValue < avg) {
 				toBeRemoved.add(s);
@@ -105,24 +96,40 @@ public class StateSpace {
 		LinkedHashSet<Node> map = new LinkedHashSet<Node>(frontier);
 		map.removeAll(toBeRemoved);
 		frontier = new ArrayList<Node>(map);
+		System.out.println("Cleaned.");
 	}
 
 	public void add() {
+		System.out.println("Adding to frontier...");
+		getDepth();
 		// initialize new frontier to old size
 		ArrayList<Node> nextLevel = new ArrayList<Node>(frontier.size());
-		
+		Node temp;
 		if (depth != 0) {
-			for (int i = 0; i < frontier.size(); i++) {
-				nextLevel.addAll(frontier.get(i).generateChildren());
-				// System.out.println(nextLevel.size());
+			if(depth % 2 ==0){
+				for (int i = 0; i < frontier.size(); i++) {
+					temp = frontier.get(i);
+					nextLevel.addAll(temp.generateChildren(temp.opposite));
+					// System.out.println(nextLevel.size());
+				}
+			}else if(depth % 2 == 1){
+				for (int i = 0; i < frontier.size(); i++) {
+					temp = frontier.get(i);
+
+					nextLevel.addAll(temp.generateChildren(temp.getType()));
+					// System.out.println(nextLevel.size());
+				}
 			}
 		} else {
-			nextLevel.addAll(root.getQueenMoves(root.state(), root.getType()));
+			nextLevel.addAll(root.generateChildren(root.getType()));
+		
 		}
-
+		
 		frontier.clear();
 		frontier.addAll(nextLevel);
 		depth++;
+		System.out.println("Done adding.");
+
 	}
 
 	public int getDepth() {
@@ -150,7 +157,6 @@ public class StateSpace {
 	 */
 	public int alphaBeta() { // returns an action
 		//getDepth();
-		System.out.println("Calculated depth: " + depth);
 		return maxValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, depth);
 	}
 
@@ -171,9 +177,11 @@ public class StateSpace {
 		for (Node child : s.getChildren()) {
 			v = Math.max(v, minValue(child, alpha, beta, limit - 1));
 			alpha = Math.max(alpha, v);
+
 			if (beta <= alpha) {
 				break;
 			}
+
 		}
 		s.hValue = v;
 		return v;
@@ -199,9 +207,11 @@ public class StateSpace {
 		for (Node child : s.getChildren()) {
 			v = Math.min(v, maxValue(child, alpha, beta, limit - 1));
 			beta = Math.min(beta, v);
+
 			if (beta <= alpha) {
 				break;
 			}
+
 		}
 		s.hValue = v;
 		return v;

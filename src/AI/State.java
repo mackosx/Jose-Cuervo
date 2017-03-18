@@ -87,7 +87,7 @@ public class State extends GameModel {
 	 * @return receives a move and a state, then executes the move on the state
 	 *         and returns a new board
 	 */
-	public static State result(State state, GameMove move) {
+	public State result(State state, GameMove move) {
 		State newState = new State(state.rows, state.columns);
 		for (int i = 0; i < state.board.length; i++) {
 			for (int j = 0; j < state.board[0].length; j++) {
@@ -143,7 +143,7 @@ public class State extends GameModel {
 					break;
 				}
 			}
-			b += "\n";
+			b += "|\n";
 		}
 		return b;
 	}
@@ -170,7 +170,7 @@ public class State extends GameModel {
 						break;
 					}
 			}
-			b += "\n";
+			b += "|\n";
 		}
 		return b;
 	}

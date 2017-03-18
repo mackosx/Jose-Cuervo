@@ -18,6 +18,7 @@ public class Node {
 	public int hValue;
 	private boolean expanded  = false;
 	ArrayList<Node> validMoves = new ArrayList<Node>();
+	String opposite = "";
 
 	public Node(State state, String type) {
 		this.type = type;
@@ -25,6 +26,7 @@ public class Node {
 		validMoves = new ArrayList<Node>();
 		parent = null;
 		getQueens(type);
+		opposite = type.equals("white")?"black":"white";
 	}
 
 	public State state() {
@@ -42,12 +44,13 @@ public class Node {
 	public ArrayList<Node> getChildren(){
 		return validMoves;
 	}
-	public ArrayList<Node> generateChildren() {
+	public ArrayList<Node> generateChildren(String type) {
 		if(!expanded){
-			getQueenMoves(this.state, this.type == "white" ? "black" : "white");
+			getQueenMoves(this.state, type);
 			expanded = true;
-		}
-		return validMoves;
+			return validMoves;
+		}else
+			return validMoves;
 		
 	}
 
@@ -81,11 +84,11 @@ public class Node {
 	 */
 	public ArrayList<Node> getQueenMoves(State game, String type) {
 		
-
+		validMoves.clear();
 		for (int queen = 0; queen < queenLocations.length; queen++) {
 			int currRow = getQueens(type)[queen][0];
 			int currCol = getQueens(type)[queen][1];
-
+			//int moveCount = 0;
 			// check above
 			for (int i = currRow - 1; i >= 0; i--) {
 				if (!occupied(i, currCol, currRow, currCol, game)) {
@@ -168,6 +171,7 @@ public class Node {
 					break;
 				}
 			}
+
 		}
 		return validMoves;
 
@@ -179,7 +183,7 @@ public class Node {
 	 *            - move made a queen with out arrow position
 	 * @return - map of all moves with arrow positions
 	 */
-	static int count = 0;
+	int count = 0;
 
 	public void getArrowMoves(GameMove move, String type) {
 		// check left
@@ -194,10 +198,6 @@ public class Node {
 				child.move = tempMove;
 				validMoves.add(child); // insert a new search tree node
 				
-//				System.out.println(tempMove.toString());
-//				System.out.println("added left arrow move");
-//				// System.out.println(temp.toString());
-//				System.out.println(++count);
 
 			} else {
 				break;
@@ -214,10 +214,6 @@ public class Node {
 				child.move = tempMove;
 				validMoves.add(child);
 				
-//				System.out.println(tempMove.toString());
-//				System.out.println("added right arrow move");
-//				// System.out.println(temp.toString());
-//				System.out.println(++count);
 
 			} else {
 				break;
@@ -234,9 +230,6 @@ public class Node {
 				child.parent = this;
 				validMoves.add(child);
 				
-//				System.out.println("added up arrow move");
-//				// System.out.println(temp.toString());
-//				System.out.println(++count);
 
 			} else {
 				break;
@@ -253,9 +246,7 @@ public class Node {
 				child.move = tempMove;
 				validMoves.add(child);
 				
-//				System.out.println("added down arrow move");
-//				System.out.println(temp.toString());
-//				System.out.println(++count);
+
 
 			} else {
 				break;
@@ -274,9 +265,6 @@ public class Node {
 				child.move = tempMove;
 				validMoves.add(child);
 				
-//				System.out.println("added up-right arrow move");
-//				// System.out.println(temp.toString());
-//				System.out.println(++count);
 
 			} else {
 				break;
@@ -294,9 +282,7 @@ public class Node {
 				child.move = tempMove;
 				validMoves.add(child);
 				
-//				System.out.println("added down-right arrow move");
-//				// System.out.println(temp.toString());
-//				System.out.println(++count);
+
 
 			} else {
 				break;
@@ -314,9 +300,7 @@ public class Node {
 				child.move = tempMove;
 				validMoves.add(child);
 				
-//				System.out.println("added up-left arrow move");
-//				// System.out.println(temp.toString());
-//				System.out.println(++count);
+
 
 			} else {
 				break;
@@ -334,18 +318,12 @@ public class Node {
 				child.move = tempMove;
 				validMoves.add(child);
 				
-//				System.out.println("added down-left arrow move");
-//				// System.out.println(temp.toString());
-//				System.out.println(++count);
 
 			} else {
 				break;
 			}
 		}
-		//print out all arrow moves for a given queen move
-//		for (int i = 0; i < validMoves.size(); i++) {
-//			System.out.println(validMoves.get(i).state().toString());
-//		}
+
 
 	}
 
