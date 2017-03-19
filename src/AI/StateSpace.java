@@ -53,7 +53,7 @@ public class StateSpace {
 				clean();
 			}
 			add();
-		} else if (turnCount >= 40) {
+		} else if (turnCount >= 45) {
 			for (int i = 0; i < 2; i++) {
 				clean();
 				add();

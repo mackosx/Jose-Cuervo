@@ -181,18 +181,18 @@ public class Jose extends GamePlayer {
 	private void setupGUI(GameClient client) throws IOException {
 		// setup fram
 		guiFrame = new JFrame();
-		guiFrame.setSize(700, 600);
-		guiFrame.setTitle("Game of the Amazons (COSC 322, UBCO)");
+		guiFrame.setSize(675, 575);
+		guiFrame.setIconImage(ImageIO.read(new File("resources/icon.png")));
+		guiFrame.setTitle("Game of the Amazons - Jose Cuervo");
 		guiFrame.setLocation(350, 150);
 		guiFrame.setVisible(true);
 		guiFrame.setLayout(null);
 		guiFrame.setResizable(false);
 		// set up main container
 		Container background = new JLabel(
-				new ImageIcon(ImageIO.read(new File("resources/jungle_by_ego_trap_graphics.jpg"))));
+				new ImageIcon(ImageIO.read(new File("resources/jungleBg.jpg"))));
 		guiFrame.setContentPane(background);
 		background.setLayout(new BorderLayout());
-		background.setSize(700, 600);
 
 		board = createGameBoard();
 		board.setOpaque(false);
@@ -301,7 +301,7 @@ public class Jose extends GamePlayer {
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		// uncomment second Amazon for the ai to play against itself
-		// Jose game = new Jose("JoseW", "cosc322");
+		Jose game = new Jose("JoseW", "cosc322");
 		Jose game2 = new Jose("JoseB", "cosc");
 
 	}

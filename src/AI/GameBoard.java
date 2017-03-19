@@ -99,7 +99,6 @@ public class GameBoard extends JPanel {
 					try {
 						img = ImageIO.read(new File("resources/blackQueen.png"));
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					g.drawImage(img, posX + 5, posY + 5, n);
@@ -111,7 +110,6 @@ public class GameBoard extends JPanel {
 					try {
 						img = ImageIO.read(new File("resources/arrow.png"));
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					g.drawImage(img, posX + 5, posY + 5, n);
@@ -122,7 +120,6 @@ public class GameBoard extends JPanel {
 					try {
 						img = ImageIO.read(new File("resources/whiteQueen.png"));
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					g.drawImage(img, posX + 5, posY + 5, n);
@@ -170,6 +167,8 @@ public class GameBoard extends JPanel {
 			} else if (counter == 1) {
 				if (qfr == row && qfc == col) {
 					counter = 0;
+					System.out.println("CLICK COUNT: " + counter);
+
 				} else {
 					qrow = row;
 					qcol = col;
@@ -181,6 +180,8 @@ public class GameBoard extends JPanel {
 			} else if (counter == 2) {
 				if ((row == qrow && col == qcol)) {
 					counter = 0;
+					System.out.println("CLICK COUNT: " + counter);
+
 				} else {
 					arow = row;
 					acol = col;
@@ -192,8 +193,8 @@ public class GameBoard extends JPanel {
 
 			if (counter == 3) {
 				if (arow == qrow && acol == qcol) {
-					System.out.println("dont click there.\nMOVE RESET");
 					counter = 0;
+					System.out.println("CLICK COUNT: " + counter);
 				} else {
 					System.out.println("CLICK COUNT: " + counter);
 					counter = 0;
@@ -205,6 +206,7 @@ public class GameBoard extends JPanel {
 					qcol = 0;
 					arow = 0;
 					acol = 0;
+					
 				}
 			}
 		}
