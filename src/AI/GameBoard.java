@@ -1,10 +1,8 @@
 package AI;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -15,15 +13,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import ygraphs.ai.smart_fox.games.Amazon;
-import ygraphs.ai.smart_fox.games.GamePlayer;
-
-
 /**
  * @author mackosx
  */
 public class GameBoard extends JPanel {
-	
+
 	private static final long serialVersionUID = 1L;
 	private int rows = 10;
 	private int cols = 10;
@@ -38,28 +32,24 @@ public class GameBoard extends JPanel {
 
 	int r = 0;
 	int c = 0;
-
+	GameEventHandler ev = new GameEventHandler();
 	public Jose game = null;
 	private State gameModel = null;
 
-	
 	public GameBoard(Jose amazon) {
-		addMouseListener(new  GameEventHandler());
+		addMouseListener(ev);
 		this.game = amazon;
 		gameModel = new State(this.rows, this.cols);
 		init();
 	}
 
-
-
-
-	
 	public State getState() {
 		return gameModel;
 	}
 
 	/**
 	 * setup initial board state with amazons
+	 * 
 	 * @param isPlayerA
 	 */
 	public void init() {
@@ -78,27 +68,25 @@ public class GameBoard extends JPanel {
 		gameModel.setBoardLocation(6, 9, tagW);
 		gameModel.setBoardLocation(9, 3, tagW);
 		gameModel.setBoardLocation(9, 6, tagW);
-		
-	
+
 	}
 
 	// JCmoponent method
 	protected void paintComponent(Graphics gg) {
 		Graphics g = (Graphics2D) gg;
-		
 
 		for (int i = 0; i < rows + 1; i++) {
 			g.drawLine(i * cellDim + offset, offset, i * cellDim + offset, rows * cellDim + offset);
 			g.drawLine(offset, i * cellDim + offset, cols * cellDim + offset, i * cellDim + offset);
 		}
-		
+
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
 
 				posX = c * cellDim + offset;
 				posY = r * cellDim + offset;
 
-				g.setColor(new Color(255,255,255,50));
+				g.setColor(new Color(255, 255, 255, 50));
 
 				if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_AVAILABLE)) {
 					g.fillRect(posX + 1, posY + 1, 49, 49);
@@ -117,8 +105,7 @@ public class GameBoard extends JPanel {
 					g.drawImage(img, posX + 5, posY + 5, n);
 				} else if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_ARROW)) {
 					g.fillRect(posX + 1, posY + 1, 49, 49);
-					//g.drawLine(posX, posY, posX + 50, posY + 50);
-					//g.drawLine(posX, posY + 50, posX + 50, posY);
+
 					ImageObserver n = null;
 					BufferedImage img = null;
 					try {
@@ -140,16 +127,13 @@ public class GameBoard extends JPanel {
 					}
 					g.drawImage(img, posX + 5, posY + 5, n);
 				}
-				
+
 			}
 		}
-		
 
 	}
 
-
 	// JComponent method
-
 	public class GameEventHandler extends MouseAdapter {
 
 		int counter = 0;
@@ -165,8 +149,6 @@ public class GameBoard extends JPanel {
 
 		public void mousePressed(MouseEvent e) {
 
-
-
 			int x = e.getX();
 			int y = e.getY();
 
@@ -178,47 +160,60 @@ public class GameBoard extends JPanel {
 			int col = (x - offset) / cellDim;
 
 			if (counter == 0) {
-				qfr = row;
-				qfc = col;
+				if (gameModel.getBoard()[row][col].equals("white") || gameModel.getBoard()[row][col].equals("black")) {
+					qfr = row;
+					qfc = col;
+					counter++;
+					System.out.println("CLICK COUNT: " + counter);
+				}
 
-				//qfr = 9 - qfr;
-				counter++;
 			} else if (counter == 1) {
-				qrow = row;
-				qcol = col;
+				if (qfr == row && qfc == col) {
+					counter = 0;
+				} else {
+					qrow = row;
+					qcol = col;
+					counter++;
+					System.out.println("CLICK COUNT: " + counter);
 
-				//qrow = 9 - qrow;
-				counter++;
+				}
+
 			} else if (counter == 2) {
-				arow = row;
-				acol = col;
+				if ((row == qrow && col == qcol)) {
+					counter = 0;
+				} else {
+					arow = row;
+					acol = col;
+					counter++;
+					System.out.println("CLICK COUNT: " + counter);
 
-				//arow = 9 - arow;
-				counter++;
+				}
 			}
 
 			if (counter == 3) {
-				counter = 0;
-				System.out.println(qrow+" "+" "+qcol);
-				markPosition(new GameMove(qfr, qfc, qrow, qcol, arow, acol));
-				game.turnCount++;
-				
+				if (arow == qrow && acol == qcol) {
+					System.out.println("dont click there.\nMOVE RESET");
+					counter = 0;
+				} else {
+					System.out.println("CLICK COUNT: " + counter);
+					counter = 0;
+					System.out.println(qrow + " " + " " + qcol);
+					markPosition(new GameMove(qfr, qfc, qrow, qcol, arow, acol));
+					game.turnCount++;
 
-
-				qrow = 0;
-				qcol = 0;
-				arow = 0;
-				acol = 0;
-
+					qrow = 0;
+					qcol = 0;
+					arow = 0;
+					acol = 0;
+				}
 			}
 		}
 
-		
 	}// end of GameEventHandler
+
 	public void markPosition(GameMove gameMove) {
 		gameModel.positionMarked(gameMove);
-		repaint();			
+		repaint();
 	}
-	
 
 }// end

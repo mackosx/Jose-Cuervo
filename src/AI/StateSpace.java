@@ -10,12 +10,13 @@ public class StateSpace {
 	int depth = 0;
 	GameMove bestMove;
 	int turnCount;
+
 	public StateSpace(Node r, int turns) {
 		root = r;
 		turnCount = turns;
 	}
-	
-	public void startAlphaBeta(){
+
+	public void startAlphaBeta() {
 		getDepth();
 		root.hValue = alphaBeta();
 		ArrayList<Node> bestMoves = new ArrayList<Node>();
@@ -23,7 +24,7 @@ public class StateSpace {
 		for (Node s : root.getChildren()) {
 			if (s.hValue >= max) {
 				max = s.hValue;
-				
+
 			}
 		}
 		for (Node s : root.getChildren()) {
@@ -31,7 +32,7 @@ public class StateSpace {
 				bestMoves.add(s);
 			}
 		}
-		if(root.getChildren().size() <= 0){
+		if (root.getChildren().size() <= 0) {
 			System.out.println("Game Over.");
 			System.exit(1);
 		}
@@ -41,43 +42,44 @@ public class StateSpace {
 		State st = new State(root.state().getBoard());
 		System.out.println(st.result(root.state(), bestMove).toString());
 	}
+
 	public void search() {
-		//right now is static level generation
+		// right now is static level generation
 		// TODO: could convert to iterative deepening
 		add();
 		if (turnCount > 70) {
-			for(int i = 0; i < 4; i++){
+			for (int i = 0; i < 4; i++) {
 				add();
 				clean();
 			}
 			add();
-		} else if (turnCount >= 40){
-			for(int i = 0; i < 2; i++){
+		} else if (turnCount >= 40) {
+			for (int i = 0; i < 2; i++) {
 				clean();
 				add();
 			}
-		} else if (turnCount >= 20){
+		} else if (turnCount >= 20) {
 			clean();
 			add();
 
 		}
-		
+
 		System.out.println("Starting Alpha Beta Pruning/Minimax.");
 		startAlphaBeta();
 		System.out.println("Done pruning.");
-		
+
 	}
 
 	/**
 	 * removes nodes whose value is less than average
 	 */
 	public void clean() {
-		Evaluator eval = new Evaluator();
+		// Evaluator eval = new Evaluator();
 		int avg = 0;
 		System.out.println("Evaluation in progress...");
 		for (Node s : frontier) {
 			// TODO: stop repeated evaluations at level 0
-			//s.hValue = eval.newMinDist(s);
+			// s.hValue = eval.newMinDist(s);
 			avg += s.hValue;
 
 		}
@@ -107,13 +109,13 @@ public class StateSpace {
 		ArrayList<Node> nextLevel = new ArrayList<Node>(frontier.size());
 		Node temp;
 		if (depth != 0) {
-			if(depth % 2 ==0){
+			if (depth % 2 == 0) {
 				for (int i = 0; i < frontier.size(); i++) {
 					temp = frontier.get(i);
 					nextLevel.addAll(temp.generateChildren(temp.opposite));
 					// System.out.println(nextLevel.size());
 				}
-			}else if(depth % 2 == 1){
+			} else if (depth % 2 == 1) {
 				for (int i = 0; i < frontier.size(); i++) {
 					temp = frontier.get(i);
 
@@ -123,9 +125,9 @@ public class StateSpace {
 			}
 		} else {
 			nextLevel.addAll(root.generateChildren(root.getType()));
-		
+
 		}
-		
+
 		frontier.clear();
 		frontier.addAll(nextLevel);
 		depth++;
@@ -148,6 +150,7 @@ public class StateSpace {
 		return depth;
 
 	}
+
 	/**
 	 * 
 	 * @param s
@@ -157,7 +160,7 @@ public class StateSpace {
 	 * @return best move from a-B pruning
 	 */
 	public int alphaBeta() { // returns an action
-		//getDepth();
+		// getDepth();
 		return maxValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, depth);
 	}
 
@@ -199,11 +202,11 @@ public class StateSpace {
 	 */
 	public int minValue(Node s, int alpha, int beta, int limit) {
 		Evaluator eval = new Evaluator();
-		if (limit == 0){
+		if (limit == 0) {
 			s.hValue = eval.newMinDist(s);
 			return s.hValue;
 		}
-			
+
 		int v = Integer.MAX_VALUE;
 		for (Node child : s.getChildren()) {
 			v = Math.min(v, maxValue(child, alpha, beta, limit - 1));

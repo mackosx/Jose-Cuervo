@@ -35,8 +35,6 @@ public class State extends GameModel {
 		this.board = b;
 	}
 
-	
-
 	// marks a new move on the current instance of state.board
 	/**
 	 * Marks a move on the board associated with this state (changes this board)
@@ -137,7 +135,7 @@ public class State extends GameModel {
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[0].length; j++) {
 				if (i == row && j == col) {
-					b+= "|x";
+					b += "|x";
 				} else
 					switch (this.board[i][j]) {
 					case "white":

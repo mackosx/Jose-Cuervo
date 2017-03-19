@@ -16,7 +16,7 @@ public class Node {
 	private String type;
 	private GameMove move;
 	public int hValue;
-	private boolean expanded  = false;
+	private boolean expanded = false;
 	ArrayList<Node> validMoves = new ArrayList<Node>();
 	String opposite = "";
 
@@ -26,7 +26,7 @@ public class Node {
 		validMoves = new ArrayList<Node>();
 		parent = null;
 		getQueens(type);
-		opposite = type.equals("white")?"black":"white";
+		opposite = type.equals("white") ? "black" : "white";
 	}
 
 	public State state() {
@@ -36,29 +36,29 @@ public class Node {
 	public void setState(State state) {
 		this.state = state;
 	}
-	public String getType(){
+
+	public String getType() {
 		return this.type;
 	}
-	
-	
-	public ArrayList<Node> getChildren(){
+
+	public ArrayList<Node> getChildren() {
 		return validMoves;
 	}
+
 	public ArrayList<Node> generateChildren(String type) {
-		if(!expanded){
+		if (!expanded) {
 			getQueenMoves(this.state, type);
 			expanded = true;
 			return validMoves;
-		}else
+		} else
 			return validMoves;
-		
+
 	}
 
 	public int[][] getQueens(String colour) {
 		// If opposite = true, will return location of opposite queens
 		int[][] queens = new int[4][2];
 
-		
 		int counter = 0;
 		for (int i = 0; i < state.getBoard().length; i++) {
 			for (int j = 0; j < state.getBoard()[0].length; j++) {
@@ -83,12 +83,12 @@ public class Node {
 	 * @return - all valid moves for the current board state
 	 */
 	public ArrayList<Node> getQueenMoves(State game, String type) {
-		
+
 		validMoves.clear();
 		for (int queen = 0; queen < queenLocations.length; queen++) {
 			int currRow = getQueens(type)[queen][0];
 			int currCol = getQueens(type)[queen][1];
-			//int moveCount = 0;
+			// int moveCount = 0;
 			// check above
 			for (int i = currRow - 1; i >= 0; i--) {
 				if (!occupied(i, currCol, currRow, currCol, game)) {
@@ -97,7 +97,7 @@ public class Node {
 					getArrowMoves(new GameMove(currRow, currCol, i, currCol), type);
 				} else {
 					break;
-				} 
+				}
 			}
 
 			// check below
@@ -193,11 +193,10 @@ public class Node {
 				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, move.newRow, j);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, type);
-				
+
 				child.parent = this;
 				child.move = tempMove;
 				validMoves.add(child); // insert a new search tree node
-				
 
 			} else {
 				break;
@@ -209,11 +208,10 @@ public class Node {
 				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, move.newRow, j);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, type);
-				
+
 				child.parent = this;
 				child.move = tempMove;
 				validMoves.add(child);
-				
 
 			} else {
 				break;
@@ -225,11 +223,10 @@ public class Node {
 				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, move.newCol);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, type);
-				
+
 				child.move = tempMove;
 				child.parent = this;
 				validMoves.add(child);
-				
 
 			} else {
 				break;
@@ -241,12 +238,10 @@ public class Node {
 				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, move.newCol);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, type);
-				
+
 				child.parent = this;
 				child.move = tempMove;
 				validMoves.add(child);
-				
-
 
 			} else {
 				break;
@@ -260,11 +255,10 @@ public class Node {
 				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, type);
-				
+
 				child.parent = this;
 				child.move = tempMove;
 				validMoves.add(child);
-				
 
 			} else {
 				break;
@@ -277,12 +271,10 @@ public class Node {
 				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, type);
-				
+
 				child.parent = this;
 				child.move = tempMove;
 				validMoves.add(child);
-				
-
 
 			} else {
 				break;
@@ -295,12 +287,10 @@ public class Node {
 				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, type);
-				
+
 				child.parent = this;
 				child.move = tempMove;
 				validMoves.add(child);
-				
-
 
 			} else {
 				break;
@@ -313,17 +303,15 @@ public class Node {
 				GameMove tempMove = new GameMove(move.row, move.col, move.newRow, move.newCol, i, j);
 				State temp = state.result(state, tempMove);
 				Node child = new Node(temp, type);
-				
+
 				child.parent = this;
 				child.move = tempMove;
 				validMoves.add(child);
-				
 
 			} else {
 				break;
 			}
 		}
-
 
 	}
 

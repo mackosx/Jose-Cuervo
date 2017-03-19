@@ -1,23 +1,18 @@
 package AI;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -139,6 +134,7 @@ public class Jose extends GamePlayer {
 				this.colour = "white";
 				System.out.println("Jose's Move.");
 				makeMove(++turnCount);
+				System.out.println("turncount" + turnCount);
 
 			}
 
@@ -147,6 +143,7 @@ public class Jose extends GamePlayer {
 			turnCount++;
 			System.out.println("Jose's Move.");
 			makeMove(++turnCount);
+			System.out.println("turncount" + turnCount);
 		}
 		return true;
 	}
@@ -186,17 +183,17 @@ public class Jose extends GamePlayer {
 		guiFrame = new JFrame();
 		guiFrame.setSize(700, 600);
 		guiFrame.setTitle("Game of the Amazons (COSC 322, UBCO)");
-		guiFrame.setLocation(200, 200);
+		guiFrame.setLocation(350, 150);
 		guiFrame.setVisible(true);
 		guiFrame.setLayout(null);
+		guiFrame.setResizable(false);
 		// set up main container
 		Container background = new JLabel(
 				new ImageIcon(ImageIO.read(new File("resources/jungle_by_ego_trap_graphics.jpg"))));
 		guiFrame.setContentPane(background);
 		background.setLayout(new BorderLayout());
 		background.setSize(700, 600);
-		//background.add(Box.createVerticalGlue());
-		// background.add(background);
+
 		board = createGameBoard();
 		board.setOpaque(false);
 
@@ -205,8 +202,10 @@ public class Jose extends GamePlayer {
 		// add button to calculate AI move
 		JButton btn = new JButton();
 		JPanel pnl = new JPanel();
-		btn.setSize(20, 20);
-		btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		JButton btn2 = new JButton();
+		btn2.setText("Reset Player Move");
+		btn2.setVisible(true);
+
 		btn.setAlignmentY(Component.CENTER_ALIGNMENT);
 		pnl.setLayout(new BoxLayout(pnl, BoxLayout.Y_AXIS));
 		pnl.add(btn);
@@ -215,6 +214,13 @@ public class Jose extends GamePlayer {
 		btn.setVisible(true);
 		btn.setText("Jose Move");
 		background.add(pnl, BorderLayout.EAST);
+		
+		pnl.add(btn2);
+		btn2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				board.ev.counter = 0;
+			}
+		});
 		btn.addActionListener(new ActionListener() {
 
 			@Override
@@ -295,7 +301,7 @@ public class Jose extends GamePlayer {
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		// uncomment second Amazon for the ai to play against itself
-		// Amazon game = new Amazon("JoseW", "cosc322");
+		// Jose game = new Jose("JoseW", "cosc322");
 		Jose game2 = new Jose("JoseB", "cosc");
 
 	}
