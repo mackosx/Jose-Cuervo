@@ -35,30 +35,14 @@ public class State extends GameModel {
 		this.board = b;
 	}
 
-	public void init(boolean isPlayerA) {
-		String tagB = null;
-		String tagW = null;
-
-		tagB = POS_MARKED_BLACK;
-		tagW = POS_MARKED_WHITE;
-
-		this.getBoard()[0][3] = tagW;
-		this.getBoard()[0][6] = tagW;
-		this.getBoard()[2][0] = tagW;
-		this.getBoard()[2][9] = tagW;
-
-		this.getBoard()[7][0] = tagB;
-		this.getBoard()[7][9] = tagB;
-		this.getBoard()[9][3] = tagB;
-		this.getBoard()[9][6] = tagB;
-	}
+	
 
 	// marks a new move on the current instance of state.board
 	/**
 	 * Marks a move on the board associated with this state (changes this board)
 	 * 
 	 * @param move
-	 * @return returns true is move is on the board
+	 * @return marks move and returns true is move is on the board
 	 */
 	public boolean positionMarked(GameMove move) {
 		boolean valid = true;

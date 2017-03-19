@@ -9,8 +9,10 @@ public class StateSpace {
 	ArrayList<Node> frontier = new ArrayList<Node>();;
 	int depth = 0;
 	GameMove bestMove;
-	public StateSpace(Node r) {
+	int turnCount;
+	public StateSpace(Node r, int turns) {
 		root = r;
+		turnCount = turns;
 	}
 	
 	public void startAlphaBeta(){
@@ -38,24 +40,23 @@ public class StateSpace {
 		bestMove = bestMoves.get(randomIndex).getMove();
 		State st = new State(root.state().getBoard());
 		System.out.println(st.result(root.state(), bestMove).toString());
-		Jose.turnCount++;
 	}
 	public void search() {
 		//right now is static level generation
 		// TODO: could convert to iterative deepening
 		add();
-		if (Jose.turnCount > 70) {
+		if (turnCount > 70) {
 			for(int i = 0; i < 4; i++){
 				add();
 				clean();
 			}
 			add();
-		} else if (Jose.turnCount >= 40){
+		} else if (turnCount >= 40){
 			for(int i = 0; i < 2; i++){
 				clean();
 				add();
 			}
-		} else if (Jose.turnCount >= 20){
+		} else if (turnCount >= 20){
 			clean();
 			add();
 

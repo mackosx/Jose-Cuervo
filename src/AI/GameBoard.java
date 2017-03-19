@@ -1,8 +1,10 @@
 package AI;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -21,6 +23,7 @@ import ygraphs.ai.smart_fox.games.GamePlayer;
  * @author mackosx
  */
 public class GameBoard extends JPanel {
+	
 	private static final long serialVersionUID = 1L;
 	private int rows = 10;
 	private int cols = 10;
@@ -36,25 +39,17 @@ public class GameBoard extends JPanel {
 	int r = 0;
 	int c = 0;
 
-	GamePlayer game = null;
+	public Jose game = null;
 	private State gameModel = null;
 
-	boolean playerAMove;
-
 	
-	public GameBoard(AI.Amazon amazon) {
+	public GameBoard(Jose amazon) {
 		addMouseListener(new  GameEventHandler());
 		this.game = amazon;
 		gameModel = new State(this.rows, this.cols);
-		init(true);
+		init();
 	}
-	public GameBoard(Jose amazon) {
 
-
-		this.game = amazon;
-		gameModel = new State(this.rows, this.cols);
-		init(true);
-	}
 
 
 
@@ -63,7 +58,11 @@ public class GameBoard extends JPanel {
 		return gameModel;
 	}
 
-	public void init(boolean isPlayerA) {
+	/**
+	 * setup initial board state with amazons
+	 * @param isPlayerA
+	 */
+	public void init() {
 		String tagB = null;
 		String tagW = null;
 
@@ -72,109 +71,85 @@ public class GameBoard extends JPanel {
 
 		gameModel.setBoardLocation(0, 3, tagB);
 		gameModel.setBoardLocation(0, 6, tagB);
-		gameModel.setBoardLocation(2, 0, tagB);
-		gameModel.setBoardLocation(2, 9, tagB);
+		gameModel.setBoardLocation(3, 0, tagB);
+		gameModel.setBoardLocation(3, 9, tagB);
 
-		gameModel.setBoardLocation(7, 0, tagW);
-		gameModel.setBoardLocation(7, 9, tagW);
+		gameModel.setBoardLocation(6, 0, tagW);
+		gameModel.setBoardLocation(6, 9, tagW);
 		gameModel.setBoardLocation(9, 3, tagW);
 		gameModel.setBoardLocation(9, 6, tagW);
 		
 	
 	}
 
-	/**
-	 * repaint the part of the board
-	 *
-	 * @param qrow
-	 *            queen row index
-	 * @param qcol
-	 *            queen col index
-	 * @param arow
-	 *            arrow row index
-	 * @param acol
-	 *            arrow col index
-	 * @param qfr
-	 *            queen original row
-	 * @param qfc
-	 *            queen original col
-	 */
-	public boolean markPosition(int qrow, int qcol, int arow, int acol, int qfr, int qfc, boolean opponentMove) {
-
-		System.out.println(qrow + ", " + qcol + ", " + arow + ", " + acol + ", " + qfr + ", " + qfc);
-
-		boolean valid = gameModel.positionMarked(new GameMove(qfr, qfc, qrow, qcol, arow, acol));
-		repaint();
-		return valid;
-	}
-
 	// JCmoponent method
 	protected void paintComponent(Graphics gg) {
 		Graphics g = (Graphics2D) gg;
+		
 
 		for (int i = 0; i < rows + 1; i++) {
 			g.drawLine(i * cellDim + offset, offset, i * cellDim + offset, rows * cellDim + offset);
 			g.drawLine(offset, i * cellDim + offset, cols * cellDim + offset, i * cellDim + offset);
 		}
-
+		
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
 
 				posX = c * cellDim + offset;
 				posY = r * cellDim + offset;
 
-				//posY = (9 - r) * cellDim + offset;
+				g.setColor(new Color(255,255,255,50));
 
 				if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_AVAILABLE)) {
-					g.clearRect(posX + 1, posY + 1, 49, 49);
+					g.fillRect(posX + 1, posY + 1, 49, 49);
 				}
 
 				if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_BLACK)) {
-					g.clearRect(posX + 1, posY + 1, 49, 49);
+					g.fillRect(posX + 1, posY + 1, 49, 49);
 					ImageObserver n = null;
 					BufferedImage img = null;
 					try {
-						img = ImageIO.read(new File("resources/rsz_bq.png"));
+						img = ImageIO.read(new File("resources/blackQueen.png"));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					g.drawImage(img, posX + 5, posY + 5, n);
 				} else if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_ARROW)) {
-					g.clearRect(posX + 1, posY + 1, 49, 49);
+					g.fillRect(posX + 1, posY + 1, 49, 49);
 					//g.drawLine(posX, posY, posX + 50, posY + 50);
 					//g.drawLine(posX, posY + 50, posX + 50, posY);
 					ImageObserver n = null;
 					BufferedImage img = null;
 					try {
-						img = ImageIO.read(new File("resources/rsz_arrow.png"));
+						img = ImageIO.read(new File("resources/arrow.png"));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					g.drawImage(img, posX + 5, posY + 5, n);
 				} else if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_WHITE)) {
-					g.clearRect(posX + 1, posY + 1, 49, 49);
+					g.fillRect(posX + 1, posY + 1, 49, 49);
 					ImageObserver n = null;
 					BufferedImage img = null;
 					try {
-						img = ImageIO.read(new File("resources/rsz_wq.png"));
+						img = ImageIO.read(new File("resources/whiteQueen.png"));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					g.drawImage(img, posX + 5, posY + 5, n);
 				}
+				
 			}
 		}
+		
 
 	}
 
 
 	// JComponent method
-	public Dimension getPreferredSize() {
-		return new Dimension(750, 500);
-	}
+
 	public class GameEventHandler extends MouseAdapter {
 
 		int counter = 0;
@@ -225,8 +200,9 @@ public class GameBoard extends JPanel {
 			if (counter == 3) {
 				counter = 0;
 				System.out.println(qrow+" "+" "+qcol);
-				boolean validMove = markPosition(qrow, qcol, arow, acol, qfr, qfc, false); // update itself
-				Jose.turnCount++;
+				markPosition(new GameMove(qfr, qfc, qrow, qcol, arow, acol));
+				game.turnCount++;
+				
 
 
 				qrow = 0;
@@ -236,7 +212,13 @@ public class GameBoard extends JPanel {
 
 			}
 		}
-	}// end of GameEventHandler
 
+		
+	}// end of GameEventHandler
+	public void markPosition(GameMove gameMove) {
+		gameModel.positionMarked(gameMove);
+		repaint();			
+	}
+	
 
 }// end
