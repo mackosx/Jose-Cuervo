@@ -39,6 +39,7 @@ public class Jose extends GamePlayer {
 	public String usrName = null;
 	public String colour = "white";
 	public int turnCount = 0;
+	public long startTime;
 
 	/**
 	 * Sets up server connection with name and pass, starts gui
@@ -68,9 +69,10 @@ public class Jose extends GamePlayer {
 	 * Makes a move for the AI
 	 */
 	public void makeMove(int turns) {
+		
 		System.out.println("initializing state.");
 		Node n = new Node(board.getState(), colour);
-		StateSpace s = new StateSpace(n, turns);
+		StateSpace s = new StateSpace(n, turns, startTime);
 		System.out.println("Starting search.");
 		s.search();
 		board.getState().positionMarked(s.bestMove);
@@ -101,14 +103,14 @@ public class Jose extends GamePlayer {
 	 * the GameClient when the server says the login is successful
 	 */
 	public void onLogin() {
-
+		int roomNum = 0;
 		// once logged in, the gameClient will have the names of available game
 		// rooms
 		ArrayList<String> rooms = gameClient.getRoomList();
 		System.out.println(rooms.toString());
-		this.gameClient.joinRoom(rooms.get(5));
+		this.gameClient.joinRoom(rooms.get(roomNum));
 		// 6 and 7 do NOT call handle game message OYAMA LAKE AND WOOD LAKE
-		System.out.println("Player successfully joined room.");
+		System.out.println(this.usrName + " successfully joined " + rooms.get(roomNum) + ".");
 	}
 
 	/**
@@ -124,24 +126,32 @@ public class Jose extends GamePlayer {
 	 *            - A HashMap info and data about a game action
 	 */
 	public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
-		System.out.println("Handle Game Message Called: " + messageType.toString());
+		System.out.println("Game Message Called: " + messageType.toString());
 		if (messageType.equals(GameMessage.GAME_ACTION_START)) {
 
 			if (((String) msgDetails.get("player-black")).equals(this.userName())) {
-				System.out.println("Game State: " + msgDetails.get("player-black"));
+				System.out.println(msgDetails.get("player-black") + " playing as black.");
+				System.out.println(msgDetails.get("player-white") + " playing as white.");
 				this.colour = "black";
 			} else {
+				startTime = System.currentTimeMillis();
+				System.out.println(msgDetails.get("player-white") + " playing as white.");
+				System.out.println(msgDetails.get("player-black") + " playing as black.");
 				this.colour = "white";
 				System.out.println("Jose's Move.");
+				// make a move
 				makeMove(++turnCount);
 				System.out.println("turncount" + turnCount);
 
 			}
+			
 
 		} else if (messageType.equals(GameMessage.GAME_ACTION_MOVE)) {
+			startTime = System.currentTimeMillis();
 			handleOpponentMove(msgDetails);
 			turnCount++;
 			System.out.println("Jose's Move.");
+			// make a move
 			makeMove(++turnCount);
 			System.out.println("turncount" + turnCount);
 		}
@@ -187,7 +197,7 @@ public class Jose extends GamePlayer {
 		guiFrame.setLocation(350, 150);
 		guiFrame.setVisible(true);
 		guiFrame.setLayout(null);
-		guiFrame.setResizable(false);
+		//guiFrame.setResizable(false);
 		// set up main container
 		Container background = new JLabel(
 				new ImageIcon(ImageIO.read(new File("resources/jungleBg.jpg"))));
@@ -228,7 +238,7 @@ public class Jose extends GamePlayer {
 				// Handles the calculate move button for the AI
 				System.out.println("initializing state.");
 				Node n = new Node(board.getState(), colour);
-				StateSpace s = new StateSpace(n, ++turnCount);
+				StateSpace s = new StateSpace(n, ++turnCount, startTime);
 				System.out.println("Starting search.");
 				s.search();
 				board.markPosition(s.bestMove);
@@ -272,25 +282,23 @@ public class Jose extends GamePlayer {
 	private int[][] convertCoords(int[][] positions, boolean toServerMessage) {
 		int qFormer1, qFormer2, qNew1, qNew2, a1, a2;
 		if (toServerMessage) {
-			// TODO: implement conversion from 1-10 Cartesian to our 0-9 array
 			// form
-			// rc to xy
-			qFormer1 = positions[0][1] + 1;
-			qFormer2 = 10 - positions[0][0];
-			qNew1 = positions[1][1] + 1;
-			qNew2 = 10 - positions[1][0];
-			a1 = positions[2][1] + 1;
-			a2 = 10 - positions[2][0];
+			// rc 0-9 to rc 1-10
+			qFormer1 = 10 - positions[0][0];
+			qFormer2 = positions[0][1] + 1;
+			qNew1 = 10 - positions[1][0];
+			qNew2 = positions[1][1] + 1;
+			a1 = 10 - positions[2][0];
+			a2 = positions[2][1] + 1;
 
 		} else {
-			// TODO: implement conversion form 0-9 array to 1-10 Cartesian
 			// xy to rc
-			qFormer1 = 10 - positions[0][1];
-			qFormer2 = positions[0][0] - 1;
-			qNew1 = 10 - positions[1][1];
-			qNew2 = positions[1][0] - 1;
-			a1 = 10 - positions[2][1];
-			a2 = positions[2][0] - 1;
+			qFormer1 = 10 - positions[0][0];
+			qFormer2 = positions[0][1] - 1;
+			qNew1 = 10 -positions[1][0];
+			qNew2 = positions[1][1] - 1;
+			a1 = 10 - positions[2][0];
+			a2 = positions[2][1] - 1;
 		}
 		int[][] newCoords = { { qFormer1, qFormer2 }, { qNew1, qNew2 }, { a1, a2 } };
 		return newCoords;
@@ -301,7 +309,7 @@ public class Jose extends GamePlayer {
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		// uncomment second Amazon for the ai to play against itself
-		Jose game = new Jose("JoseW", "cosc322");
+		Jose game = new Jose("Jose", "cosc322");
 		Jose game2 = new Jose("JoseB", "cosc");
 
 	}

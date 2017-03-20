@@ -19,117 +19,116 @@ public class Evaluator {
 	String opposite;
 	State s;
 
-	public int minDistance(Node n) {
-		// 1. for each point p, compare db = dist(p,Black) and dw =
-		// dist(p,White);
-		// 2. if db < dw: Black point;
-		// 3. else if db > dw: White point;
-		// 4. else point is neutral.
-		State boardstate = n.state();
-		String[][] board = boardstate.getBoard();
-		opposite = n.getType() == "black" ? "white" : "black";
-		black = n.getQueens("black");
-		white = n.getQueens("white");
-		// String[][] map = board.clone();
-
-		// Evaluate board for each queen
-		int opponentScore = 0;
-		int ourScore = 0;
-		int row = 0;
-		for (String[] i : board) {
-			int column = 0;
-			for (String j : i) {
-				if (j.equalsIgnoreCase("available")) {
-					String ownership = dist(row, column, black, white);
-					if (ownership.equals(n.getType())) {
-						// increment board for for our colour
-						ourScore++;
-					} else if (ownership.equals(opposite)) {
-						opponentScore++;
-					}
-				}
-				column++;
-			}
-			row++;
-		}
-		return ourScore - opponentScore;
-	}
-
-	/**
-	 * @param cr
-	 *            = row idx of current point (current row)
-	 * @param cc
-	 *            = column idx of current point (current column)
-	 * @param black
-	 *            = 2d array supplying row and column of all black queens
-	 * @param white
-	 *            = 2d array supplying row and column of all white queens
-	 * @return returns the color of the queen closest to the supplied point
-	 */
-	public String dist(int cr, int cc, int[][] black, int[][] white) {
-		int dw, minDW, db, minDB;
-		dw = minDW = db = minDB = Integer.MAX_VALUE;
-
-		// Determine nearest white
-		for (int[] i : white) {
-			int qr = i[0];
-			int qc = i[1];
-			if (!((qc == cc) && (cr == qr))) {
-				if (qc == cc) {
-					dw = Math.abs(qr - cr);
-				} else if (qr == cr) {
-					dw = Math.abs(qc - cc);
-				} else if (((qr + qc) == (cr + cc)) || ((Math.abs(qr - qc)) == (Math.abs(cr - cc)))) {
-					dw = Math.abs(qc - cc);
-				}
-			}
-
-			if (dw < minDW) {
-				minDW = dw;
-			}
-		}
-
-		// Determine nearest black
-		for (int[] j : black) {
-			int qr = j[0];
-			int qc = j[1];
-			if (!((qc == cc) && (cr == qr))) {
-				if (qc == cc) {
-					db = Math.abs(qr - cr);
-				} else if (qr == cr) {
-					db = Math.abs(qc - cc);
-				} else if ((qr + qc) == (cr + cc)) {
-					db = Math.abs(qc - cc);
-				}
-			}
-
-			if (db < minDB) {
-				minDB = db;
-			}
-		}
-
-		if (minDB < minDW) {
-			return "black";
-		} else if (minDB > minDW) {
-			return "white";
-		} else {
-			return "neutral";
-		}
-	}
+//	public int minDistance(Node n) {
+//		// 1. for each point p, compare db = dist(p,Black) and dw =
+//		// dist(p,White);
+//		// 2. if db < dw: Black point;
+//		// 3. else if db > dw: White point;
+//		// 4. else point is neutral.
+//		State boardstate = n.state();
+//		String[][] board = boardstate.getBoard();
+//		opposite = n.getType() == "black" ? "white" : "black";
+//		black = n.getQueens("black");
+//		white = n.getQueens("white");
+//		// String[][] map = board.clone();
+//
+//		// Evaluate board for each queen
+//		int opponentScore = 0;
+//		int ourScore = 0;
+//		int row = 0;
+//		for (String[] i : board) {
+//			int column = 0;
+//			for (String j : i) {
+//				if (j.equalsIgnoreCase("available")) {
+//					String ownership = dist(row, column, black, white);
+//					if (ownership.equals(n.getType())) {
+//						// increment board for for our colour
+//						ourScore++;
+//					} else if (ownership.equals(opposite)) {
+//						opponentScore++;
+//					}
+//				}
+//				column++;
+//			}
+//			row++;
+//		}
+//		return ourScore - opponentScore;
+//	}
+//
+//	/**
+//	 * @param cr
+//	 *            = row idx of current point (current row)
+//	 * @param cc
+//	 *            = column idx of current point (current column)
+//	 * @param black
+//	 *            = 2d array supplying row and column of all black queens
+//	 * @param white
+//	 *            = 2d array supplying row and column of all white queens
+//	 * @return returns the color of the queen closest to the supplied point
+//	 */
+//	public String dist(int cr, int cc, int[][] black, int[][] white) {
+//		int dw, minDW, db, minDB;
+//		dw = minDW = db = minDB = Integer.MAX_VALUE;
+//
+//		// Determine nearest white
+//		for (int[] i : white) {
+//			int qr = i[0];
+//			int qc = i[1];
+//			if (!((qc == cc) && (cr == qr))) {
+//				if (qc == cc) {
+//					dw = Math.abs(qr - cr);
+//				} else if (qr == cr) {
+//					dw = Math.abs(qc - cc);
+//				} else if (((qr + qc) == (cr + cc)) || ((Math.abs(qr - qc)) == (Math.abs(cr - cc)))) {
+//					dw = Math.abs(qc - cc);
+//				}
+//			}
+//
+//			if (dw < minDW) {
+//				minDW = dw;
+//			}
+//		}
+//
+//		// Determine nearest black
+//		for (int[] j : black) {
+//			int qr = j[0];
+//			int qc = j[1];
+//			if (!((qc == cc) && (cr == qr))) {
+//				if (qc == cc) {
+//					db = Math.abs(qr - cr);
+//				} else if (qr == cr) {
+//					db = Math.abs(qc - cc);
+//				} else if ((qr + qc) == (cr + cc)) {
+//					db = Math.abs(qc - cc);
+//				}
+//			}
+//
+//			if (db < minDB) {
+//				minDB = db;
+//			}
+//		}
+//
+//		if (minDB < minDW) {
+//			return "black";
+//		} else if (minDB > minDW) {
+//			return "white";
+//		} else {
+//			return "neutral";
+//		}
+//	}
 
 	// test evaluator
 	int ourScore = 0;
 	int theirScore = 0;
 	String str="";
-	public int newMinDist(Node n) {
+	public int newMinDist(Node n, boolean kingMoves) {
 		String[][] s = n.state().getBoard();
 		ourScore = 0;
 		theirScore = 0;
 		for (int i = 0; i < s.length; i++) {
 			for (int j = 0; j < s[0].length; j++) {
-				//System.out.println(n.state().toString(i, j));
 				if (s[i][j].equals("available"))
-					findNearestQueen(i, j, n);
+					findNearestQueen(i, j, n, kingMoves);
 			}
 			str+="\n";
 		}
@@ -137,7 +136,7 @@ public class Evaluator {
 		return ourScore - theirScore;
 	}
 
-	public void findNearestQueen(int row, int col, Node n) {
+	public void findNearestQueen(int row, int col, Node n, boolean kingMoves) {
 		State b = n.state();
 		opposite = n.getType() == "black" ? "white" : "black";
 		boolean[][] checked = new boolean[10][10]; // 2d board representation of
@@ -147,7 +146,10 @@ public class Evaluator {
 		boolean isFound = false;
 		// Initialize the queue
 		Queue<GameMove> q = new LinkedList<>();
-		q = getQueenMoves(row, col, b, checked);
+		if(kingMoves)
+			q = getKingMoves(row, col, b, checked);
+		else
+			q = getQueenMoves(row, col, b, checked);
 		while (!isFound) {
 			Queue<GameMove> tempQ = new LinkedList<>();
 			int index = q.size();
@@ -166,39 +168,34 @@ public class Evaluator {
 					boolean contested = false;
 					// Check if tile is contested
 					for (GameMove remainder : q) {
-						// If a queen is found in the rest of the queue, tile is
-						// contested
+						// If an opponents queen also has control of tile, tile is contested
 						if (b.getBoard()[remainder.row][remainder.col].equals(currentOpposite))
 							contested = true;
 					}
 					if (contested){
-						//System.out.println("neutral.");
-						str+="|N";
 						break;
 					}
 					// Determine who's queen it is, increase count accordingly
 					if (b.getBoard()[currentTile.row][currentTile.col].equals(opposite)) {
 						theirScore++;
-						str+="|2";
-						//System.out.println("opponent controlled." + theirScore);
 	
 					} else {
-						str+="|1";
-
 						ourScore++;
-						//System.out.println("our control." + ourScore);
 					}
 				
 					// If element is the last in the queue (ie: current 'layer')
 					// then break
 					break;
 				}
-				// If not a queen, mark location as checked
+				// If position not a queen, mark location as checked
 				else
 					checked[currentTile.row][currentTile.col] = true;
 				// If free square (not arrow), add neighbours of it to tempQ
 				if (b.getBoard()[currentTile.row][currentTile.col].equals("available")) {
-					tempQ.addAll(getQueenMoves(currentTile.row, currentTile.col, b, checked));
+					if(kingMoves)
+						tempQ.addAll(getKingMoves(currentTile.row, currentTile.col, b, checked));
+					else
+						tempQ.addAll(getQueenMoves(currentTile.row, currentTile.col, b, checked));
 				}
 			}
 			q = tempQ;
@@ -324,5 +321,61 @@ public class Evaluator {
 			return true;
 		}
 	}
+	public LinkedList<GameMove> getKingMoves(int currRow, int currCol, State boardstate, boolean[][] checked) {
+		// check above
+		LinkedList<GameMove> validMoves = new LinkedList<GameMove>();
+		if (currRow - 1 >= 0) {
+			if (!checked[currRow - 1][currCol])
+				validMoves.add(new GameMove(currRow - 1, currCol));
+		}
+
+		// check below
+		if (currRow + 1 <= 9) {
+			if (!checked[currRow + 1][currCol])
+				validMoves.add(new GameMove(currRow + 1, currCol));
+
+		}
+
+		// check left
+		if (currCol - 1 >= 0) {
+			if (!checked[currRow][currCol - 1])
+				validMoves.add(new GameMove(currRow, currCol - 1));
+
+		}
+
+		// check right
+		if (currCol + 1 <= 9) {
+			if (!checked[currRow][currCol + 1])
+				validMoves.add(new GameMove(currRow, currCol + 1));
+		}
+
+		// check up-right
+		if (currRow + 1 <= 9&& currCol - 1 >= 0) {
+			if (!checked[currRow + 1][currCol - 1])
+				validMoves.add(new GameMove(currRow + 1, currCol - 1));
+		}
+		
+		// check up-left
+		if (currRow - 1 >= 0 && currCol - 1 >= 0) {
+			if (!checked[currRow - 1][currCol - 1])
+				validMoves.add(new GameMove(currRow - 1, currCol - 1));
+		}
+
+		// check down-right
+		if (currRow + 1 <= 9 && currCol + 1 <= 9) {
+			if (!checked[currRow + 1][currCol + 1])
+				validMoves.add(new GameMove(currRow + 1, currCol + 1));
+
+		}
+
+		// check down left
+		if (currRow - 1 >= 0 && currCol + 1 <= 9) {
+			if (!checked[currRow - 1][currCol + 1])
+				validMoves.add(new GameMove(currRow - 1, currCol + 1));
+		}
+		return validMoves;
+
+	}
+	
 
 }

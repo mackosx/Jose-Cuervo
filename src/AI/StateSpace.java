@@ -10,8 +10,10 @@ public class StateSpace {
 	int depth = 0;
 	GameMove bestMove;
 	int turnCount;
+	long start;
 
-	public StateSpace(Node r, int turns) {
+	public StateSpace(Node r, int turns, long start) {
+		this.start = start;
 		root = r;
 		turnCount = turns;
 	}
@@ -53,7 +55,7 @@ public class StateSpace {
 				clean();
 			}
 			add();
-		} else if (turnCount >= 45) {
+		} else if (turnCount >= 30) {
 			for (int i = 0; i < 2; i++) {
 				clean();
 				add();
@@ -173,17 +175,28 @@ public class StateSpace {
 	public int maxValue(Node s, int alpha, int beta, int limit) {
 		Evaluator eval = new Evaluator();
 		if (limit == 0) {
-			s.hValue = eval.newMinDist(s);
+			// TODO: use king moves or queen moves based on turn count
+			// if(turnCount > 10){
+			// s.hValue = eval.newMinDist(s, true);
+			// }else
+			s.hValue = eval.newMinDist(s, false);
 			return s.hValue;
 		}
 
 		int v = Integer.MIN_VALUE;
 		for (Node child : s.getChildren()) {
+			if(timeLeft(this.start)){
 			v = Math.max(v, minValue(child, alpha, beta, limit - 1));
 			alpha = Math.max(alpha, v);
 
 			if (beta <= alpha) {
 				break;
+			}
+			}
+			
+			else{
+				s.hValue = v;
+				return v;
 			}
 
 		}
@@ -203,23 +216,42 @@ public class StateSpace {
 	public int minValue(Node s, int alpha, int beta, int limit) {
 		Evaluator eval = new Evaluator();
 		if (limit == 0) {
-			s.hValue = eval.newMinDist(s);
+			// TODO: use king moves or queen moves based on turn count
+			// if(turnCount > 10){
+			// s.hValue = eval.newMinDist(s, true);
+			// }else
+			s.hValue = eval.newMinDist(s, false);
 			return s.hValue;
 		}
 
 		int v = Integer.MAX_VALUE;
 		for (Node child : s.getChildren()) {
-			v = Math.min(v, maxValue(child, alpha, beta, limit - 1));
-			beta = Math.min(beta, v);
+			if (timeLeft(this.start)) {
+				v = Math.min(v, maxValue(child, alpha, beta, limit - 1));
+				beta = Math.min(beta, v);
 
-			if (beta <= alpha) {
-				break;
-			}
+				if (beta <= alpha) {
+					break;
+				}
+			} else
+				s.hValue = v;
+				return v;
 
 		}
 		s.hValue = v;
 		return v;
 
+	}
+
+	public boolean timeLeft(long startTime) {
+		long now = System.currentTimeMillis();
+		if ((now - startTime) / 1000 < 28)
+			return true;
+		else{
+			System.out.println("Times up.");
+			return false;
+		}
+			
 	}
 
 }
