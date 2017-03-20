@@ -138,13 +138,12 @@ public class Evaluator {
 
 	public void findNearestQueen(int row, int col, Node n, boolean kingMoves) {
 		State b = n.state();
-		opposite = n.getType() == "black" ? "white" : "black";
+		opposite = n.opposite;
 		boolean[][] checked = new boolean[10][10]; // 2d board representation of
 													// if a spot has been
 													// checked
 		checked[row][col] = true; // Mark starting tile as checked
 		boolean isFound = false;
-		// Initialize the queue
 		Queue<GameMove> q = new LinkedList<>();
 		if(kingMoves)
 			q = getKingMoves(row, col, b, checked);
@@ -153,20 +152,17 @@ public class Evaluator {
 		while (!isFound) {
 			Queue<GameMove> tempQ = new LinkedList<>();
 			int index = q.size();
-			// If empty tile is trapped, break
 			if (index == 0) {
 				isFound = true;
 				break;
 			}
 			for (int i = 0; i < index; i++) {
 				GameMove currentTile = q.poll();
-				// If queen is found, increase count and break
 				String current = b.getBoard()[currentTile.row][currentTile.col];
 				if (current.equals("white")||current.equals("black")) {
 					isFound = true;
 					String currentOpposite = current.equals("white")?"black":"white";
 					boolean contested = false;
-					// Check if tile is contested
 					for (GameMove remainder : q) {
 						// If an opponents queen also has control of tile, tile is contested
 						if (b.getBoard()[remainder.row][remainder.col].equals(currentOpposite))
@@ -175,22 +171,17 @@ public class Evaluator {
 					if (contested){
 						break;
 					}
-					// Determine who's queen it is, increase count accordingly
 					if (b.getBoard()[currentTile.row][currentTile.col].equals(opposite)) {
+						//TODO: might work better. who knows really
 						theirScore++;
 	
 					} else {
 						ourScore++;
 					}
-				
-					// If element is the last in the queue (ie: current 'layer')
-					// then break
 					break;
 				}
-				// If position not a queen, mark location as checked
 				else
 					checked[currentTile.row][currentTile.col] = true;
-				// If free square (not arrow), add neighbours of it to tempQ
 				if (b.getBoard()[currentTile.row][currentTile.col].equals("available")) {
 					if(kingMoves)
 						tempQ.addAll(getKingMoves(currentTile.row, currentTile.col, b, checked));
@@ -202,16 +193,24 @@ public class Evaluator {
 		}
 	}
 	
-	public int numMovesHeuristic(Node n){
+	public int numMovesHeuristic(Node n, String type){
 		boolean[][] b = new boolean[10][10];
 		int numMoves = 0;
-		int[][] queens = n.getQueens(n.getType());
+		int opponentMoves = 0;
+		int[][] queens = n.getQueens(type);
 		for(int count = 0; count < queens.length; count++){
 			int currRow = queens[count][0];
 			int currCol = queens[count][1];
 			numMoves+=getQueenMoves(currRow, currCol, n.state(), b).size();
 		}
 		
+//		queens = n.getQueens(type.equals("white")?"black": "white");
+//		for(int count = 0; count < queens.length; count++){
+//			int currRow = queens[count][0];
+//			int currCol = queens[count][1];
+//			opponentMoves+=getQueenMoves(currRow, currCol, n.state(), b).size();
+//		}
+//		
 		return numMoves;
 		
 	}

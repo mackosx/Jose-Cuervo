@@ -70,7 +70,6 @@ public class Jose extends GamePlayer {
 	 */
 	public void makeMove(int turns) {
 		
-		System.out.println("initializing state.");
 		Node n = new Node(board.getState(), colour);
 		StateSpace s = new StateSpace(n, turns, startTime);
 		System.out.println("Starting search.");
@@ -79,6 +78,7 @@ public class Jose extends GamePlayer {
 		int[][] p = { { s.bestMove.row, s.bestMove.col }, { s.bestMove.newRow, s.bestMove.newCol },
 				{ s.bestMove.arrowRow, s.bestMove.arrowCol } };
 		p = convertCoords(p, true);
+		System.out.println("Jose moving Queen at " + "["+p[0][0] + ", " + p[0][1] + "]");
 		this.gameClient.sendMoveMessage(p[0], p[1], p[2]);
 
 		guiFrame.repaint();
@@ -103,13 +103,14 @@ public class Jose extends GamePlayer {
 	 * the GameClient when the server says the login is successful
 	 */
 	public void onLogin() {
-		int roomNum = 0;
+		int roomNum = 1;
 		// once logged in, the gameClient will have the names of available game
 		// rooms
 		ArrayList<String> rooms = gameClient.getRoomList();
 		System.out.println(rooms.toString());
 		this.gameClient.joinRoom(rooms.get(roomNum));
 		// 6 and 7 do NOT call handle game message OYAMA LAKE AND WOOD LAKE
+		// jk maybe they work
 		System.out.println(this.usrName + " successfully joined " + rooms.get(roomNum) + ".");
 	}
 
@@ -126,9 +127,9 @@ public class Jose extends GamePlayer {
 	 *            - A HashMap info and data about a game action
 	 */
 	public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
-		System.out.println("Game Message Called: " + messageType.toString());
+		//System.out.println("Game Message Called: " + messageType.toString());
 		if (messageType.equals(GameMessage.GAME_ACTION_START)) {
-
+			System.out.println("GAME STARTING.");
 			if (((String) msgDetails.get("player-black")).equals(this.userName())) {
 				System.out.println(msgDetails.get("player-black") + " playing as black.");
 				System.out.println(msgDetails.get("player-white") + " playing as white.");
@@ -140,8 +141,9 @@ public class Jose extends GamePlayer {
 				this.colour = "white";
 				System.out.println("Jose's Move.");
 				// make a move
-				makeMove(++turnCount);
-				System.out.println("turncount" + turnCount);
+				System.out.println("Turn " + turnCount+".");
+				
+				makeMove(turnCount++);
 
 			}
 			
@@ -152,8 +154,9 @@ public class Jose extends GamePlayer {
 			turnCount++;
 			System.out.println("Jose's Move.");
 			// make a move
-			makeMove(++turnCount);
-			System.out.println("turncount" + turnCount);
+			System.out.println("Turn " + turnCount + ".");
+			
+			makeMove(turnCount++);
 		}
 		return true;
 	}
@@ -165,19 +168,22 @@ public class Jose extends GamePlayer {
 	 */
 	@SuppressWarnings("unchecked")
 	private void handleOpponentMove(Map<String, Object> msgDetails) {
-		System.out.println("OpponentMove(): " + msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
+		System.out.println("Opponent moved Queen at " + msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
 		ArrayList<Integer> qcurr = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR);
 		ArrayList<Integer> qnew = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT);
 		ArrayList<Integer> arrow = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.ARROW_POS);
-		System.out.println("QCurr: " + qcurr);
-		System.out.println("QNew: " + qnew);
-		System.out.println("Arrow: " + arrow);
+//		System.out.println("QCurr: " + qcurr);
+//		System.out.println("QNew: " + qnew);
+//		System.out.println("Arrow: " + arrow);
 		// should call convertCoords
 		int[][] p = { { qcurr.get(0), qcurr.get(1) }, { qnew.get(0), qnew.get(1) }, { arrow.get(0), arrow.get(1) } };
 		p = convertCoords(p, false);
-
+		if(!(board.getState().getBoard()[p[0][0]][p[0][1]].equals("white")||board.getState().getBoard()[p[0][0]][p[0][1]].equals("black"))){
+			System.out.println("WAS NOT A QUEEN");
+			
+		}
 		board.markPosition(new GameMove(p[0][0], p[0][1], p[1][0], p[1][1], p[2][0], p[2][1]));
-		System.out.println(board.getState().toString());
+		//System.out.println(board.getState().toString());
 
 	}
 
@@ -236,8 +242,8 @@ public class Jose extends GamePlayer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Handles the calculate move button for the AI
-				System.out.println("initializing state.");
 				Node n = new Node(board.getState(), colour);
+				startTime = System.currentTimeMillis();
 				StateSpace s = new StateSpace(n, ++turnCount, startTime);
 				System.out.println("Starting search.");
 				s.search();
@@ -309,8 +315,8 @@ public class Jose extends GamePlayer {
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		// uncomment second Amazon for the ai to play against itself
-		Jose game = new Jose("Jose", "cosc322");
-		Jose game2 = new Jose("JoseB", "cosc");
+		Jose game = new Jose("Jose", "pass123");
+		//Jose game2 = new Jose("JoseB", "pass123");
 
 	}
 

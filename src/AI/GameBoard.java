@@ -74,7 +74,7 @@ public class GameBoard extends JPanel {
 	// JCmoponent method
 	protected void paintComponent(Graphics gg) {
 		Graphics g = (Graphics2D) gg;
-
+		g.setColor(new Color(237, 37, 37));
 		for (int i = 0; i < rows + 1; i++) {
 			g.drawLine(i * cellDim + offset, offset, i * cellDim + offset, rows * cellDim + offset);
 			g.drawLine(offset, i * cellDim + offset, cols * cellDim + offset, i * cellDim + offset);
