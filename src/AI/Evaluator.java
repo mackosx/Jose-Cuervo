@@ -4,9 +4,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Evaluator {
-
-	public Evaluator() {
-		// Constructor
+	Node root = null;
+	public Evaluator(Node root) {
+		this.root = root;
 	}
 
 	/**
@@ -132,13 +132,13 @@ public class Evaluator {
 			}
 			str+="\n";
 		}
-
+		
 		return ourScore - theirScore;
 	}
 
 	public void findNearestQueen(int row, int col, Node n, boolean kingMoves) {
 		State b = n.state();
-		opposite = n.opposite;
+		opposite = root.opposite;
 		boolean[][] checked = new boolean[10][10]; // 2d board representation of
 													// if a spot has been
 													// checked
@@ -193,25 +193,25 @@ public class Evaluator {
 		}
 	}
 	
-	public int numMovesHeuristic(Node n, String type){
+	public int numMovesHeuristic(Node n){
 		boolean[][] b = new boolean[10][10];
 		int numMoves = 0;
 		int opponentMoves = 0;
-		int[][] queens = n.getQueens(type);
+		int[][] queens = n.getQueens(root.getType());
 		for(int count = 0; count < queens.length; count++){
 			int currRow = queens[count][0];
 			int currCol = queens[count][1];
 			numMoves+=getQueenMoves(currRow, currCol, n.state(), b).size();
 		}
 		
-//		queens = n.getQueens(type.equals("white")?"black": "white");
-//		for(int count = 0; count < queens.length; count++){
-//			int currRow = queens[count][0];
-//			int currCol = queens[count][1];
-//			opponentMoves+=getQueenMoves(currRow, currCol, n.state(), b).size();
-//		}
-//		
-		return numMoves;
+		queens = n.getQueens(root.opposite);
+		for(int count = 0; count < queens.length; count++){
+			int currRow = queens[count][0];
+			int currCol = queens[count][1];
+			opponentMoves+=getQueenMoves(currRow, currCol, n.state(), b).size();
+		}
+		
+		return numMoves - opponentMoves;
 		
 	}
 

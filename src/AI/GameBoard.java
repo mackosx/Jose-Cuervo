@@ -74,21 +74,27 @@ public class GameBoard extends JPanel {
 	// JCmoponent method
 	protected void paintComponent(Graphics gg) {
 		Graphics g = (Graphics2D) gg;
-		g.setColor(new Color(237, 37, 37));
+		// color of lines
+		g.setColor(new Color(1, 89, 0));
 		for (int i = 0; i < rows + 1; i++) {
 			g.drawLine(i * cellDim + offset, offset, i * cellDim + offset, rows * cellDim + offset);
 			g.drawLine(offset, i * cellDim + offset, cols * cellDim + offset, i * cellDim + offset);
 		}
-
+		boolean dark = true;
 		for (int r = 0; r < rows; r++) {
+			dark = !dark;
 			for (int c = 0; c < cols; c++) {
-
+				dark=!dark;
 				posX = c * cellDim + offset;
 				posY = r * cellDim + offset;
 
-				g.setColor(new Color(255, 255, 255, 50));
-
+				
+				if(dark)
+					g.setColor(new Color(118, 65, 52, 170));
+				else
+					g.setColor(new Color(173, 131, 80, 170));
 				if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_AVAILABLE)) {
+					
 					g.fillRect(posX + 1, posY + 1, 49, 49);
 				}
 

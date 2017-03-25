@@ -69,7 +69,7 @@ public class Jose extends GamePlayer {
 	 * Makes a move for the AI
 	 */
 	public void makeMove(int turns) {
-		
+		System.out.println(colour+"'s MOVE");
 		Node n = new Node(board.getState(), colour);
 		StateSpace s = new StateSpace(n, turns, startTime);
 		System.out.println("Starting search.");
@@ -103,7 +103,7 @@ public class Jose extends GamePlayer {
 	 * the GameClient when the server says the login is successful
 	 */
 	public void onLogin() {
-		int roomNum = 1;
+		int roomNum = 8;
 		// once logged in, the gameClient will have the names of available game
 		// rooms
 		ArrayList<String> rooms = gameClient.getRoomList();
@@ -143,7 +143,7 @@ public class Jose extends GamePlayer {
 				// make a move
 				System.out.println("Turn " + turnCount+".");
 				
-				makeMove(turnCount++);
+				makeMove(turnCount+=2);
 
 			}
 			
@@ -197,7 +197,7 @@ public class Jose extends GamePlayer {
 	private void setupGUI(GameClient client) throws IOException {
 		// setup fram
 		guiFrame = new JFrame();
-		guiFrame.setSize(675, 575);
+		guiFrame.setSize(700, 575);
 		guiFrame.setIconImage(ImageIO.read(new File("resources/icon.png")));
 		guiFrame.setTitle("Game of the Amazons - Jose Cuervo");
 		guiFrame.setLocation(350, 150);
@@ -254,6 +254,7 @@ public class Jose extends GamePlayer {
 				// convert to 1-10 xy to send to server
 				p = convertCoords(p, true);
 				client.sendMoveMessage(p[0], p[1], p[2]);
+				System.out.println(turnCount++);
 			}
 
 		});

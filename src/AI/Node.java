@@ -45,9 +45,9 @@ public class Node {
 		return validMoves;
 	}
 
-	public ArrayList<Node> generateChildren(String type) {
+	public ArrayList<Node> generateChildren() {
 		if (!expanded) {
-			getQueenMoves(this.state, type);
+			getQueenMoves(this.state, opposite);
 			expanded = true;
 			return validMoves;
 		} else
@@ -56,7 +56,6 @@ public class Node {
 	}
 
 	public int[][] getQueens(String colour) {
-		// If opposite = true, will return location of opposite queens
 		int[][] queens = new int[4][2];
 
 		int counter = 0;
@@ -83,11 +82,10 @@ public class Node {
 	 * @return - all valid moves for the current board state
 	 */
 	public ArrayList<Node> getQueenMoves(State game, String type) {
-
 		validMoves.clear();
 		for (int queen = 0; queen < queenLocations.length; queen++) {
-			int currRow = getQueens(type)[queen][0];
-			int currCol = getQueens(type)[queen][1];
+			int currRow = getQueens(this.type)[queen][0];
+			int currCol = getQueens(this.type)[queen][1];
 			// int moveCount = 0;
 			// check above
 			for (int i = currRow - 1; i >= 0; i--) {
