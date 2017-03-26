@@ -103,7 +103,7 @@ public class Jose extends GamePlayer {
 	 * the GameClient when the server says the login is successful
 	 */
 	public void onLogin() {
-		int roomNum = 9;
+		int roomNum = 5;
 		// once logged in, the gameClient will have the names of available game
 		// rooms
 		ArrayList<String> rooms = gameClient.getRoomList();
@@ -317,7 +317,7 @@ public class Jose extends GamePlayer {
 	public static void main(String[] args) {
 		// uncomment second Amazon for the ai to play against itself
 		Jose game = new Jose("Jose", "pass123");
-		//Jose game2 = new Jose("JoseB", "pass123");
+		Jose game2 = new Jose("JoseB", "pass123");
 
 	}
 
