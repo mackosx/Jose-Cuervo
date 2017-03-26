@@ -59,7 +59,7 @@ public class StateSpace {
 				clean();
 			}
 			add();
-		} else if (turnCount > 55) {
+		} else if (turnCount > 50) {
 			for (int i = 0; i < 2; i++) {
 				clean();
 				add();
@@ -110,7 +110,6 @@ public class StateSpace {
 				nextLevel.addAll(temp.generateChildren());
 
 			}
-			//System.out.println(temp.getType());
 
 		} else {
 			nextLevel.addAll(root.generateChildren());
@@ -119,18 +118,15 @@ public class StateSpace {
 
 		frontier.clear();
 		frontier.addAll(nextLevel);
-		//System.out.println(depth);
 		depth++;
 
 	}
 
 	public int getDepth() {
-		System.out.println("getting depth...");
 		int d = 0;
 		Node s = root;
 		while (s != null) {
 			if (!s.getChildren().isEmpty()) {
-				System.out.println(s.getType());
 				s = s.getChildren().get(0);
 
 			} else {

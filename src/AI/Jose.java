@@ -21,7 +21,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import ygraphs.ai.smart_fox.GameMessage;
-//import ygraphs.ai.smart_fox.games.Amazon;
 import ygraphs.ai.smart_fox.games.AmazonsGameMessage;
 import ygraphs.ai.smart_fox.games.GameClient;
 import ygraphs.ai.smart_fox.games.GamePlayer;
@@ -69,7 +68,7 @@ public class Jose extends GamePlayer {
 	 * Makes a move for the AI
 	 */
 	public void makeMove(int turns) {
-		System.out.println(colour+"'s MOVE");
+		System.out.println(colour + "'s MOVE");
 		Node n = new Node(board.getState(), colour);
 		StateSpace s = new StateSpace(n, turns, startTime);
 		System.out.println("Starting search.");
@@ -78,7 +77,7 @@ public class Jose extends GamePlayer {
 		int[][] p = { { s.bestMove.row, s.bestMove.col }, { s.bestMove.newRow, s.bestMove.newCol },
 				{ s.bestMove.arrowRow, s.bestMove.arrowCol } };
 		p = convertCoords(p, true);
-		System.out.println("Jose moving Queen at " + "["+p[0][0] + ", " + p[0][1] + "]");
+		System.out.println("Jose moving Queen at " + "[" + p[0][0] + ", " + p[0][1] + "]");
 		this.gameClient.sendMoveMessage(p[0], p[1], p[2]);
 
 		guiFrame.repaint();
@@ -127,7 +126,7 @@ public class Jose extends GamePlayer {
 	 *            - A HashMap info and data about a game action
 	 */
 	public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
-		//System.out.println("Game Message Called: " + messageType.toString());
+		// System.out.println("Game Message Called: " + messageType.toString());
 		if (messageType.equals(GameMessage.GAME_ACTION_START)) {
 			System.out.println("GAME STARTING.");
 			if (((String) msgDetails.get("player-black")).equals(this.userName())) {
@@ -141,12 +140,11 @@ public class Jose extends GamePlayer {
 				this.colour = "white";
 				System.out.println("Jose's Move.");
 				// make a move
-				System.out.println("Turn " + turnCount+".");
-				
-				makeMove(turnCount+=2);
+				System.out.println("Turn " + turnCount + ".");
+
+				makeMove(turnCount += 2);
 
 			}
-			
 
 		} else if (messageType.equals(GameMessage.GAME_ACTION_MOVE)) {
 			startTime = System.currentTimeMillis();
@@ -155,7 +153,7 @@ public class Jose extends GamePlayer {
 			System.out.println("Jose's Move.");
 			// make a move
 			System.out.println("Turn " + turnCount + ".");
-			
+
 			makeMove(turnCount++);
 		}
 		return true;
@@ -172,18 +170,19 @@ public class Jose extends GamePlayer {
 		ArrayList<Integer> qcurr = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR);
 		ArrayList<Integer> qnew = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT);
 		ArrayList<Integer> arrow = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.ARROW_POS);
-//		System.out.println("QCurr: " + qcurr);
-//		System.out.println("QNew: " + qnew);
-//		System.out.println("Arrow: " + arrow);
+		// System.out.println("QCurr: " + qcurr);
+		// System.out.println("QNew: " + qnew);
+		// System.out.println("Arrow: " + arrow);
 		// should call convertCoords
 		int[][] p = { { qcurr.get(0), qcurr.get(1) }, { qnew.get(0), qnew.get(1) }, { arrow.get(0), arrow.get(1) } };
 		p = convertCoords(p, false);
-		if(!(board.getState().getBoard()[p[0][0]][p[0][1]].equals("white")||board.getState().getBoard()[p[0][0]][p[0][1]].equals("black"))){
+		if (!(board.getState().getBoard()[p[0][0]][p[0][1]].equals("white")
+				|| board.getState().getBoard()[p[0][0]][p[0][1]].equals("black"))) {
 			System.out.println("WAS NOT A QUEEN");
-			
+
 		}
 		board.markPosition(new GameMove(p[0][0], p[0][1], p[1][0], p[1][1], p[2][0], p[2][1]));
-		//System.out.println(board.getState().toString());
+		// System.out.println(board.getState().toString());
 
 	}
 
@@ -203,10 +202,8 @@ public class Jose extends GamePlayer {
 		guiFrame.setLocation(350, 150);
 		guiFrame.setVisible(true);
 		guiFrame.setLayout(null);
-		//guiFrame.setResizable(false);
 		// set up main container
-		Container background = new JLabel(
-				new ImageIcon(ImageIO.read(new File("resources/jungleBg.jpg"))));
+		Container background = new JLabel(new ImageIcon(ImageIO.read(new File("resources/jungleBg.jpg"))));
 		guiFrame.setContentPane(background);
 		background.setLayout(new BorderLayout());
 
@@ -230,7 +227,7 @@ public class Jose extends GamePlayer {
 		btn.setVisible(true);
 		btn.setText("Jose Move");
 		background.add(pnl, BorderLayout.EAST);
-		
+
 		pnl.add(btn2);
 		btn2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -302,7 +299,7 @@ public class Jose extends GamePlayer {
 			// xy to rc
 			qFormer1 = 10 - positions[0][0];
 			qFormer2 = positions[0][1] - 1;
-			qNew1 = 10 -positions[1][0];
+			qNew1 = 10 - positions[1][0];
 			qNew2 = positions[1][1] - 1;
 			a1 = 10 - positions[2][0];
 			a2 = positions[2][1] - 1;
@@ -317,7 +314,7 @@ public class Jose extends GamePlayer {
 	public static void main(String[] args) {
 		// uncomment second Amazon for the ai to play against itself
 		Jose game = new Jose("Jose", "pass123");
-		Jose game2 = new Jose("JoseB", "pass123");
+		// Jose game2 = new Jose("JoseB", "pass123");
 
 	}
 

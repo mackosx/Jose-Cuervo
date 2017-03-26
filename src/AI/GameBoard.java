@@ -1,5 +1,6 @@
 package AI;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -50,7 +51,7 @@ public class GameBoard extends JPanel {
 	/**
 	 * setup initial board state with amazons
 	 * 
-	 * @param isPlayerA
+	 * 
 	 */
 	public void init() {
 		String tagB = null;
@@ -71,15 +72,21 @@ public class GameBoard extends JPanel {
 
 	}
 
-	// JCmoponent method
+	/**
+	 * paint game board
+	 */
 	protected void paintComponent(Graphics gg) {
-		Graphics g = (Graphics2D) gg;
+		super.paintComponent(gg);
+		Graphics2D g = (Graphics2D) gg.create();
+		g.setStroke(new BasicStroke(3));
 		// color of lines
-		g.setColor(new Color(1, 89, 0));
-		for (int i = 0; i < rows + 1; i++) {
-			g.drawLine(i * cellDim + offset, offset, i * cellDim + offset, rows * cellDim + offset);
-			g.drawLine(offset, i * cellDim + offset, cols * cellDim + offset, i * cellDim + offset);
-		}
+		g.setColor(new Color(0, 0, 0));
+		//g.setStroke();
+		
+			g.drawLine(0 * cellDim + offset - 1, offset, 0 * cellDim + offset - 1, rows * cellDim + offset);
+			g.drawLine(offset, 0 * cellDim + offset -1, cols * cellDim + offset, 0 * cellDim + offset -1);
+			g.drawLine(10 * cellDim + offset + 2, offset, 10 * cellDim + offset + 2, rows * cellDim + offset);
+			g.drawLine(offset, 10 * cellDim + offset + 2, cols * cellDim + offset, 10 * cellDim + offset + 2);
 		boolean dark = true;
 		for (int r = 0; r < rows; r++) {
 			dark = !dark;
@@ -87,6 +94,7 @@ public class GameBoard extends JPanel {
 				dark=!dark;
 				posX = c * cellDim + offset;
 				posY = r * cellDim + offset;
+				g.setStroke(new BasicStroke(1));
 
 				
 				if(dark)
@@ -95,11 +103,11 @@ public class GameBoard extends JPanel {
 					g.setColor(new Color(173, 131, 80, 170));
 				if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_AVAILABLE)) {
 					
-					g.fillRect(posX + 1, posY + 1, 49, 49);
+					g.fillRect(posX + 1, posY + 1, 50, 50);
 				}
 
 				if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_BLACK)) {
-					g.fillRect(posX + 1, posY + 1, 49, 49);
+					g.fillRect(posX + 1, posY + 1, 50, 50);
 					ImageObserver n = null;
 					BufferedImage img = null;
 					try {
@@ -109,7 +117,7 @@ public class GameBoard extends JPanel {
 					}
 					g.drawImage(img, posX + 5, posY + 5, n);
 				} else if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_ARROW)) {
-					g.fillRect(posX + 1, posY + 1, 49, 49);
+					g.fillRect(posX + 1, posY + 1,50, 50);
 
 					ImageObserver n = null;
 					BufferedImage img = null;
@@ -120,7 +128,7 @@ public class GameBoard extends JPanel {
 					}
 					g.drawImage(img, posX + 5, posY + 5, n);
 				} else if (gameModel.getBoard()[r][c].equalsIgnoreCase(State.POS_MARKED_WHITE)) {
-					g.fillRect(posX + 1, posY + 1, 49, 49);
+					g.fillRect(posX + 1, posY + 1, 50, 50);
 					ImageObserver n = null;
 					BufferedImage img = null;
 					try {
