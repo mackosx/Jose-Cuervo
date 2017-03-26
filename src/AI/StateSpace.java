@@ -59,12 +59,12 @@ public class StateSpace {
 				clean();
 			}
 			add();
-		} else if (turnCount > 40) {
+		} else if (turnCount > 45) {
 			for (int i = 0; i < 2; i++) {
 				clean();
 				add();
 			}
-		} else if (turnCount > 20) {
+		} else if (turnCount > 25) {
 			clean();
 			add();
 
@@ -110,6 +110,7 @@ public class StateSpace {
 				nextLevel.addAll(temp.generateChildren());
 
 			}
+			//System.out.println(temp.getType());
 
 		} else {
 			nextLevel.addAll(root.generateChildren());
@@ -118,23 +119,25 @@ public class StateSpace {
 
 		frontier.clear();
 		frontier.addAll(nextLevel);
-		System.out.println(depth);
+		//System.out.println(depth);
 		depth++;
 
 	}
 
 	public int getDepth() {
+		System.out.println("getting depth...");
 		int d = 0;
 		Node s = root;
 		while (s != null) {
-			System.out.println(s.getType());
 			if (!s.getChildren().isEmpty()) {
+				System.out.println(s.getType());
 				s = s.getChildren().get(0);
-				d++;
 
 			} else {
 				break;
 			}
+			d++;
+
 
 		}
 		depth = d;
@@ -163,35 +166,36 @@ public class StateSpace {
 
 	public int maxValue(Node s, int alpha, int beta, int limit) {
 		Evaluator eval = new Evaluator(root);
+		//System.out.println("new evaluator for " + root.getType());
 		if (limit == 0 || s.getChildren().size()==0) {
 			// TODO: use king moves or queen moves based on turn count
-			if (turnCount > 15) {
-				s.hValue = eval.newMinDist(s, true);
-			} else {
-				s.hValue = eval.newMinDist(s, false);
-			}
+//			if (turnCount > 15) {
+//				s.hValue = eval.newMinDist(s, true);
+//			} else {
+				s.hValue = eval.minDist(s, false);
+//			}
+				//System.out.println("Evaluation: " + s.hValue);
 			return s.hValue;
 
 		}
 
 		int v = Integer.MIN_VALUE;
 		for (Node child : s.getChildren()) {
-			if (timeLeft()) {
+			//if (timeLeft()) {
 				v = Math.max(v, minValue(child, alpha, beta, limit - 1));
 				alpha = Math.max(alpha, v);
 
-				if (alpha >= beta) {
+				if (beta <= alpha) {
 					break;
 				}
-			}
-
-			else {
-				s.hValue = v;
-				return v;
-			}
+//			} else {
+//				s.hValue = v;
+//				return v;
+//			}
 
 		}
 		s.hValue = v;
+		//System.out.println("Max of Evaluations: " + v);
 		return v;
 
 	}
@@ -206,32 +210,37 @@ public class StateSpace {
 	 */
 	public int minValue(Node s, int alpha, int beta, int limit) {
 		Evaluator eval = new Evaluator(root);
+		//System.out.println("new evaluator for " + root.getType());
+
 		if (limit == 0|| s.getChildren().size() == 0) {
 			// TODO: use king moves or queen moves based on turn count
-			if (turnCount > 10) {
-				s.hValue = eval.newMinDist(s, true);
-			} else {
-				s.hValue = eval.newMinDist(s, false);
-			}
+//			if (turnCount > 10) {
+//				s.hValue = eval.newMinDist(s, true);
+//			} else {
+				s.hValue = eval.minDist(s, false);
+//			}
+				//System.out.println("Evaluation: " + s.hValue);
 			return s.hValue;
 		}
 
 		int v = Integer.MAX_VALUE;
 		for (Node child : s.getChildren()) {
-			if (timeLeft()) {
+//			if (timeLeft()) {
 				v = Math.min(v, maxValue(child, alpha, beta, limit - 1));
 				beta = Math.min(beta, v);
 
 				if (beta <= alpha) {
 					break;
 				}
-			} else {
-				s.hValue = v;
-				return v;
-			}
+//			} else {
+//				s.hValue = v;
+//				return v;
+//			}
 
 		}
 		s.hValue = v;
+//		System.out.println("Min of evaluations: " + v);
+
 		return v;
 
 	}

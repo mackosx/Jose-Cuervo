@@ -121,7 +121,7 @@ public class Evaluator {
 	int ourScore = 0;
 	int theirScore = 0;
 	String str="";
-	public int newMinDist(Node n, boolean kingMoves) {
+	public int minDist(Node n, boolean kingMoves) {
 		String[][] s = n.state().getBoard();
 		ourScore = 0;
 		theirScore = 0;

@@ -103,7 +103,7 @@ public class Jose extends GamePlayer {
 	 * the GameClient when the server says the login is successful
 	 */
 	public void onLogin() {
-		int roomNum = 8;
+		int roomNum = 9;
 		// once logged in, the gameClient will have the names of available game
 		// rooms
 		ArrayList<String> rooms = gameClient.getRoomList();
