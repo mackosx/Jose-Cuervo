@@ -72,7 +72,7 @@ public class Jose extends GamePlayer {
 		Node n = new Node(board.getState(), colour);
 		StateSpace s = new StateSpace(n, turns, startTime);
 		System.out.println("Starting search.");
-		s.search();
+		s.startAlphaBeta();
 		GameMove bestMove = s.best.getMove();
 		board.getState().positionMarked(bestMove);
 		int[][] p = { { bestMove.row, bestMove.col }, { bestMove.newRow, bestMove.newCol },
@@ -244,7 +244,7 @@ public class Jose extends GamePlayer {
 				startTime = System.currentTimeMillis();
 				StateSpace s = new StateSpace(n, ++turnCount, startTime);
 				System.out.println("Starting search.");
-				s.search();
+				s.startAlphaBeta();
 				GameMove bestMove = s.best.getMove();
 				board.markPosition(bestMove);
 

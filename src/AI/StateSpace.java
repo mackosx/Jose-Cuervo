@@ -20,67 +20,16 @@ public class StateSpace {
 	}
 
 	public void startAlphaBeta() {
-		alphaBeta();		
+		System.out.println("Starting Alpha Beta Pruning/Minimax.");
+		alphaBeta();
+		System.out.println("Done searching.");
 		if (root.getChildren().size() <= 0) {
 			System.out.println("Game Over.\n" + root.opposite.toUpperCase() + "' WINS!");
 			System.out.println(root.state().toString());
 			System.exit(1);
-		}		
+		}
 		State st = new State(root.state().getBoard());
 		System.out.println(st.result(root.state(), best.getMove()).toString());
-	}
-
-	public void search() {
-		// right now is static level generation
-		// TODO: could convert to iterative deepening
-		// yolo static
-		//add();
-//		if (turnCount > 70) {
-//			for (int i = 0; i < 3; i++) {
-//				add();
-//				clean();
-//			}
-//			add();
-//			}else if (turnCount > 50) {
-//			for (int i = 0; i < 2; i++) {
-//				clean();
-//				add();
-//			}
-//			}
-//			else if (turnCount > 25) {
-//			clean();
-//			add();
-//
-//		}
-
-		System.out.println("Starting Alpha Beta Pruning/Minimax.");
-		startAlphaBeta();
-		System.out.println("Done searching.");
-
-	}
-
-	/**
-	 * removes nodes whose value is less than average
-	 */
-	
-
-	public int getDepth() {
-		int d = 0;
-		Node s = root;
-		while (s != null) {
-			if (!s.getChildren().isEmpty()) {
-				s = s.getChildren().get(0);
-
-			} else {
-				break;
-			}
-			d++;
-
-
-		}
-		depth = d;
-		return depth;
-
 	}
 
 	/**
@@ -92,10 +41,9 @@ public class StateSpace {
 	 * @return best move from a-B pruning
 	 */
 	public void alphaBeta() { // returns an action
-		// getDepth();
 		depth = 1;
 		Node tempBest = null;
-		do{
+		do {
 			best = tempBest;
 			System.out.println("Now searching depth = " + depth + "...");
 			tempBest = maxValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, depth++);
@@ -103,11 +51,10 @@ public class StateSpace {
 				System.out.println("No moves left. Game Over.\n" + root.opposite.toUpperCase() + "' WINS!");
 				System.out.println(root.state().toString());
 				System.exit(1);
-			}		
+			}
 			System.out.println("Best move so far:\n" + tempBest.toString() + " \nVALUE:" + tempBest.hValue);
-			//best = tempBest;
-		}while(timeLeft());
-		
+		} while (timeLeft());
+
 	}
 
 	/**
@@ -118,45 +65,34 @@ public class StateSpace {
 
 	public Node maxValue(Node s, int alpha, int beta, int limit) {
 		Evaluator eval = new Evaluator(root);
-		//System.out.println("new evaluator for " + root.getType());
 		if (limit == 0) {
-			// TODO: use king moves or queen moves based on turn count
-//			if (turnCount > 15) {
-//				s.hValue = eval.newMinDist(s, true);
-//			} else {
-				s.hValue = eval.minDist(s, false);
-//			}
-				//System.out.println("Evaluation: " + s.hValue);
+
+			s.hValue = eval.minDist(s, false);
 			return s;
 
 		}
 
-		Node v = new Node(null,null, Integer.MIN_VALUE);
+		Node v = new Node(null, null, Integer.MIN_VALUE);
 		for (Node child : s.generateChildren()) {
 			if (timeLeft()) {
 				Node min = minValue(child, alpha, beta, limit - 1);
-				if(min.hValue > v.hValue){
+				if (min.hValue > v.hValue) {
 					v = child;
-					//best = child;
-				}else{
-					
+				} else {
+
 				}
-				
+
 				alpha = Math.max(alpha, v.hValue);
 
 				if (beta <= alpha) {
 					break;
 				}
 			} else {
-				//s.hValue = v.hValue;
 				return v;
 			}
 
 		}
-		//s.hValue = v.hValue;
-		//best = v;
-		//System.out.println("Max of Evaluations: " + v);
-		//best = v;
+
 		return v;
 
 	}
@@ -171,16 +107,9 @@ public class StateSpace {
 	 */
 	public Node minValue(Node s, int alpha, int beta, int limit) {
 		Evaluator eval = new Evaluator(root);
-		//System.out.println("new evaluator for " + root.getType());
-
 		if (limit == 0) {
-			// TODO: use king moves or queen moves based on turn count
-//			if (turnCount > 10) {
-//				s.hValue = eval.newMinDist(s, true);
-//			} else {
-				s.hValue = eval.minDist(s, false);
-//			}
-				//System.out.println("Evaluation: " + s.hValue);
+
+			s.hValue = eval.minDist(s, false);
 			return s;
 		}
 
@@ -188,10 +117,10 @@ public class StateSpace {
 		for (Node child : s.generateChildren()) {
 
 			if (timeLeft()) {
-				if(maxValue(child, alpha, beta, limit - 1).hValue < v.hValue){
+				if (maxValue(child, alpha, beta, limit - 1).hValue < v.hValue) {
 					v = child;
-				}else{
-					
+				} else {
+
 				}
 				beta = Math.min(beta, v.hValue);
 
@@ -199,14 +128,10 @@ public class StateSpace {
 					break;
 				}
 			} else {
-				//s.hValue = v.hValue;
 				return v;
 			}
 
 		}
-		//s.hValue = v.hValue;
-//		System.out.println("Min of evaluations: " + v);
-		//best = v;
 		return v;
 
 	}
