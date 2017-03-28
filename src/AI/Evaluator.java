@@ -74,7 +74,6 @@ public class Evaluator {
 						break;
 					}
 					if (b.getBoard()[currentTile.row][currentTile.col].equals(opposite)) {
-						//TODO: might work better. who knows really
 						theirScore++;
 	
 					} else {

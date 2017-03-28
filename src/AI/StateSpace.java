@@ -44,7 +44,10 @@ public class StateSpace {
 		depth = 1;
 		Node tempBest = null;
 		do {
-			best = tempBest;
+			if(tempBest!=null){
+				System.out.println("Best move so far:\n" + tempBest.toString() + " \nVALUE:" + tempBest.hValue);
+				best = tempBest;
+			}
 			System.out.println("Now searching depth = " + depth + "...");
 			tempBest = maxValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, depth++);
 			if (root.getChildren().size() <= 0) {
@@ -52,7 +55,6 @@ public class StateSpace {
 				System.out.println(root.state().toString());
 				System.exit(1);
 			}
-			System.out.println("Best move so far:\n" + tempBest.toString() + " \nVALUE:" + tempBest.hValue);
 		} while (timeLeft());
 
 	}
@@ -66,8 +68,10 @@ public class StateSpace {
 	public Node maxValue(Node s, int alpha, int beta, int limit) {
 		Evaluator eval = new Evaluator(root);
 		if (limit == 0) {
-
-			s.hValue = eval.minDist(s, false);
+			boolean kings = false;
+			if(turnCount>20)
+				kings = true;
+			s.hValue = eval.minDist(s, kings);
 			return s;
 
 		}
@@ -75,9 +79,11 @@ public class StateSpace {
 		Node v = new Node(null, null, Integer.MIN_VALUE);
 		for (Node child : s.generateChildren()) {
 			if (timeLeft()) {
+				
 				Node min = minValue(child, alpha, beta, limit - 1);
 				if (min.hValue > v.hValue) {
 					v = child;
+					s.hValue = v.hValue;
 				} else {
 
 				}
@@ -108,8 +114,10 @@ public class StateSpace {
 	public Node minValue(Node s, int alpha, int beta, int limit) {
 		Evaluator eval = new Evaluator(root);
 		if (limit == 0) {
-
-			s.hValue = eval.minDist(s, false);
+			boolean kings = false;
+			if(turnCount>20)
+				kings = true;
+			s.hValue = eval.minDist(s, kings);
 			return s;
 		}
 
@@ -119,6 +127,7 @@ public class StateSpace {
 			if (timeLeft()) {
 				if (maxValue(child, alpha, beta, limit - 1).hValue < v.hValue) {
 					v = child;
+					s.hValue = v.hValue;
 				} else {
 
 				}
@@ -139,7 +148,7 @@ public class StateSpace {
 	public boolean timeLeft() {
 		long startTime = this.start;
 		long now = System.currentTimeMillis();
-		if ((now - startTime) / 1000 < 7)
+		if ((now - startTime) / 1000 < 10)
 			return true;
 		else {
 			System.out.println("Times up.");
