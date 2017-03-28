@@ -44,7 +44,7 @@ public class StateSpace {
 		depth = 1;
 		Node tempBest = null;
 		do {
-			if(tempBest!=null){
+			if (tempBest != null) {
 				System.out.println("Best move so far:\n" + tempBest.toString() + " \nVALUE:" + tempBest.hValue);
 				best = tempBest;
 			}
@@ -69,7 +69,8 @@ public class StateSpace {
 		Evaluator eval = new Evaluator(root);
 		if (limit == 0) {
 			boolean kings = false;
-			if(turnCount>20)
+			// heuristic switch over to start making territory
+			if (turnCount > 15)
 				kings = true;
 			s.hValue = eval.minDist(s, kings);
 			return s;
@@ -79,7 +80,7 @@ public class StateSpace {
 		Node v = new Node(null, null, Integer.MIN_VALUE);
 		for (Node child : s.generateChildren()) {
 			if (timeLeft()) {
-				
+
 				Node min = minValue(child, alpha, beta, limit - 1);
 				if (min.hValue > v.hValue) {
 					v = child;
@@ -115,7 +116,8 @@ public class StateSpace {
 		Evaluator eval = new Evaluator(root);
 		if (limit == 0) {
 			boolean kings = false;
-			if(turnCount>20)
+			// heuristic switch over to start making territory
+			if (turnCount > 15)
 				kings = true;
 			s.hValue = eval.minDist(s, kings);
 			return s;
@@ -145,13 +147,16 @@ public class StateSpace {
 
 	}
 
+	// checks if there is time left
 	public boolean timeLeft() {
+		// adjust time limit
+		int timeLimit = 15;
 		long startTime = this.start;
 		long now = System.currentTimeMillis();
-		if ((now - startTime) / 1000 < 10)
+		if ((now - startTime) / 1000 < timeLimit)
 			return true;
 		else {
-			System.out.println("Times up.");
+			System.out.println("Times up. Time: " + (now - startTime) / 1000.0);
 			return false;
 		}
 
