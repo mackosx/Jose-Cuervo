@@ -99,6 +99,11 @@ public class StateSpace {
 			best = tempBest;
 			System.out.println("Now searching depth = " + depth + "...");
 			tempBest = maxValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, depth++);
+			if (root.getChildren().size() <= 0) {
+				System.out.println("No moves left. Game Over.\n" + root.opposite.toUpperCase() + "' WINS!");
+				System.out.println(root.state().toString());
+				System.exit(1);
+			}		
 			System.out.println("Best move so far:\n" + tempBest.toString() + " \nVALUE:" + tempBest.hValue);
 			//best = tempBest;
 		}while(timeLeft());
