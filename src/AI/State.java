@@ -121,7 +121,7 @@ public class State extends GameModel {
 					b += "|+";
 					break;
 				case "available":
-					b += "| ";
+					b += "|_";
 					break;
 				}
 			}

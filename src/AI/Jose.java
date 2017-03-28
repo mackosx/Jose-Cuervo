@@ -73,9 +73,10 @@ public class Jose extends GamePlayer {
 		StateSpace s = new StateSpace(n, turns, startTime);
 		System.out.println("Starting search.");
 		s.search();
-		board.getState().positionMarked(s.bestMove);
-		int[][] p = { { s.bestMove.row, s.bestMove.col }, { s.bestMove.newRow, s.bestMove.newCol },
-				{ s.bestMove.arrowRow, s.bestMove.arrowCol } };
+		GameMove bestMove = s.best.getMove();
+		board.getState().positionMarked(bestMove);
+		int[][] p = { { bestMove.row, bestMove.col }, { bestMove.newRow, bestMove.newCol },
+				{ bestMove.arrowRow, bestMove.arrowCol } };
 		p = convertCoords(p, true);
 		System.out.println("Jose moving Queen at " + "[" + p[0][0] + ", " + p[0][1] + "]");
 		this.gameClient.sendMoveMessage(p[0], p[1], p[2]);
@@ -102,7 +103,7 @@ public class Jose extends GamePlayer {
 	 * the GameClient when the server says the login is successful
 	 */
 	public void onLogin() {
-		int roomNum = 5;
+		int roomNum =5;
 		// once logged in, the gameClient will have the names of available game
 		// rooms
 		ArrayList<String> rooms = gameClient.getRoomList();
@@ -244,10 +245,11 @@ public class Jose extends GamePlayer {
 				StateSpace s = new StateSpace(n, ++turnCount, startTime);
 				System.out.println("Starting search.");
 				s.search();
-				board.markPosition(s.bestMove);
+				GameMove bestMove = s.best.getMove();
+				board.markPosition(bestMove);
 
-				int[][] p = { { s.bestMove.row, s.bestMove.col }, { s.bestMove.newRow, s.bestMove.newCol },
-						{ s.bestMove.arrowRow, s.bestMove.arrowCol } };
+				int[][] p = { { bestMove.row, bestMove.col }, { bestMove.newRow, bestMove.newCol },
+						{ bestMove.arrowRow, bestMove.arrowCol } };
 				// convert to 1-10 xy to send to server
 				p = convertCoords(p, true);
 				client.sendMoveMessage(p[0], p[1], p[2]);
@@ -314,7 +316,7 @@ public class Jose extends GamePlayer {
 	public static void main(String[] args) {
 		// uncomment second Amazon for the ai to play against itself
 		Jose game = new Jose("Jose", "pass123");
-		// Jose game2 = new Jose("JoseB", "pass123");
+		Jose game2 = new Jose("JoseB", "pass123");
 
 	}
 

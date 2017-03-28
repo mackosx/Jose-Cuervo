@@ -28,6 +28,18 @@ public class Node {
 		getQueens(type);
 		opposite = type.equals("white") ? "black" : "white";
 	}
+	public Node(State state, String type, int hValue) {
+		this.hValue = hValue;
+		this.type = type;
+		setState(state);
+		validMoves = new ArrayList<Node>();
+		parent = null;
+		if(type!=null){
+
+		getQueens(type);
+		opposite = type.equals("white") ? "black" : "white";
+		}
+	}
 
 	public State state() {
 		return state;
@@ -351,6 +363,9 @@ public class Node {
 
 	public void setMove(GameMove move) {
 		this.move = move;
+	}
+	public String toString(){
+		return this.state.toString();
 	}
 
 }
